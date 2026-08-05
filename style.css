@@ -146,6 +146,29 @@ p{color:var(--ink-70)}
   .rise{opacity:1;animation:none;filter:none;transform:none}
 }
 
+/* ---------- Animated mesh gradient ("Almoayyed" / Bloom Field) ----------
+   4 colour blobs as layered radial-gradients over a solid backdrop, plus
+   a fractal-noise grain layer blended with `overlay`. Centres are CSS
+   custom properties (--bx1..4 / --by1..4) written every frame by
+   mesh-gradient.js; the values here are the exact rest-frame fallback,
+   so the panel still renders correctly with JS disabled. */
+.mesh-gradient{
+  position:absolute;inset:0;width:100%;height:100%;
+  background-color:#D7D5D5;
+  background-image:
+    url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.280'/></svg>"),
+    radial-gradient(circle at var(--bx1, 66.94%) var(--by1, 46.43%), rgba(215, 213, 213, 1) 0%, rgba(215, 213, 213, 0.844) 19.02%, rgba(215, 213, 213, 0.5) 38.05%, rgba(215, 213, 213, 0.156) 57.07%, rgba(215, 213, 213, 0) 76.1%),
+    radial-gradient(circle at var(--bx2, 34.69%) var(--by2, 66.31%), rgba(49, 5, 39, 1) 0%, rgba(49, 5, 39, 0.844) 12.73%, rgba(49, 5, 39, 0.5) 25.45%, rgba(49, 5, 39, 0.156) 38.18%, rgba(49, 5, 39, 0) 50.9%),
+    radial-gradient(circle at var(--bx3, 48.93%) var(--by3, 19.32%), rgba(57, 5, 31, 1) 0%, rgba(57, 5, 31, 0.844) 16.75%, rgba(57, 5, 31, 0.5) 33.5%, rgba(57, 5, 31, 0.156) 50.25%, rgba(57, 5, 31, 0) 67%),
+    radial-gradient(circle at var(--bx4, 80.23%) var(--by4, 87.54%), rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.844) 10.28%, rgba(255, 255, 255, 0.5) 20.55%, rgba(255, 255, 255, 0.156) 30.83%, rgba(255, 255, 255, 0) 41.1%);
+  background-size:120px 120px, auto, auto, auto, auto;
+  background-blend-mode:overlay, normal, normal, normal, normal;
+}
+
+/* ---------- Testimonials: 2-up variant (trimmed home page) ---------- */
+.testimonials--2{grid-template-columns:repeat(2,1fr);max-width:840px;margin-inline:auto}
+@media (max-width:700px){.testimonials--2{grid-template-columns:1fr;max-width:480px}}
+
 /* ---------- Placeholder media panels ----------
    Stand-ins for real photography: a warm, editorial gradient plus a
    fine-line motif from the studio's "drafting mark" system (arch,

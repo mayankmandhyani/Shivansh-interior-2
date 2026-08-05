@@ -67,8 +67,7 @@
 <!-- ============ HERO ============ -->
 <section class="hero">
   <div class="hero__media">
-    <!-- Replace with: <img src="hero-living-room.jpg" alt="Sunlit luxury living room with custom furnishings" class="media__zoom"> -->
-    <div class="media media--a"><div class="media__zoom"></div></div>
+    <div class="mesh-gradient" id="heroGradient" aria-hidden="true"></div>
   </div>
   <div class="hero__scrim"></div>
   <div class="hero__content">
@@ -180,13 +179,6 @@
         <p>Bespoke joinery and furniture pieces, drawn and detailed in-studio, made by trusted craft partners.</p>
         <a href="projects.html" class="service-card__link">Explore <svg viewBox="0 0 16 16" fill="none"><path d="M2 8H14M14 8L9 3M14 8L9 13" stroke="currentColor" stroke-width="1.3"/></svg></a>
       </article>
-
-      <article class="service-card" style="background:var(--charcoal);color:var(--white)">
-        <p class="eyebrow eyebrow--light">Plan No. 03</p>
-        <h3 style="margin-top:14px">Have a project<br>in mind?</h3>
-        <p style="color:rgba(255,255,255,.6)">Tell us about your space — we typically reply within one business day.</p>
-        <a href="https://wa.me/919106544247?text=Hi,%20I'd%20like%20to%20discuss%20my%20interior%20design%20project." class="btn btn--primary btn--sm" style="margin-top:auto;width:fit-content">Start a Conversation</a>
-      </article>
     </div>
   </div>
 </section>
@@ -249,12 +241,6 @@
         <div class="masonry__ring"></div>
         <div class="masonry__caption"><div class="k">Apartment</div><div class="t">Worli Sky Residence</div></div>
       </div>
-      <div class="masonry__item" data-media="media--c" data-title="Meridian Consulting HQ" data-location="BKC, Mumbai" data-tag="Office" data-desc="A 12,000 sq.ft. corporate headquarters balancing formal meeting suites with a relaxed, café-style commons." data-year="2023" data-area="12,000 sq.ft" data-scope="Commercial Turnkey">
-        <a href="projects.html" class="stretched-link" aria-label="View Meridian Consulting HQ in the full portfolio"></a>
-        <div class="media media--c"><div class="media__zoom"></div></div>
-        <div class="masonry__ring"></div>
-        <div class="masonry__caption"><div class="k">Office</div><div class="t">Meridian Consulting HQ</div></div>
-      </div>
       <div class="masonry__item wide" data-media="media--d" data-title="Juhu Family Living Room" data-location="Juhu, Mumbai" data-tag="Living Room" data-desc="A double-height living room anchored by a hand-plastered fireplace wall and a custom low-slung seating landscape." data-year="2024" data-area="620 sq.ft" data-scope="Interior Design">
         <a href="projects.html" class="stretched-link" aria-label="View Juhu Family Living Room in the full portfolio"></a>
         <div class="media media--d"><div class="media__zoom"></div></div>
@@ -266,12 +252,6 @@
         <div class="media media--stone"><div class="media__zoom"></div></div>
         <div class="masonry__ring"></div>
         <div class="masonry__caption"><div class="k">Kitchen</div><div class="t">The Fern Kitchen</div></div>
-      </div>
-      <div class="masonry__item" data-media="media--a" data-title="Shaded Bedroom Suite" data-location="Alibaug, Maharashtra" data-tag="Bedroom" data-desc="A primary suite conceived as a quiet retreat — plastered walls, linen upholstery and a private reading alcove." data-year="2024" data-area="540 sq.ft" data-scope="Interior Design">
-        <a href="projects.html" class="stretched-link" aria-label="View Shaded Bedroom Suite in the full portfolio"></a>
-        <div class="media media--a"><div class="media__zoom"></div></div>
-        <div class="masonry__ring"></div>
-        <div class="masonry__caption"><div class="k">Bedroom</div><div class="t">Shaded Bedroom Suite</div></div>
       </div>
     </div>
   </div>
@@ -286,7 +266,7 @@
         <h2 style="margin-top:20px">Client Testimonials</h2>
       </div>
     </div>
-    <div class="testimonials reveal-stagger">
+    <div class="testimonials testimonials--2 reveal-stagger">
       <div class="testi">
         <div class="testi__stars" aria-hidden="true">
           <svg viewBox="0 0 16 16"><path d="M8 1L9.9 5.6L15 6L11.2 9.3L12.4 14.3L8 11.7L3.6 14.3L4.8 9.3L1 6L6.1 5.6L8 1Z"/></svg>
@@ -299,20 +279,6 @@
         <div class="testi__who">
           <div class="testi__mono">RK</div>
           <div><div class="name">Rhea Kapoor</div><div class="role">Villa Client, Alibaug</div></div>
-        </div>
-      </div>
-      <div class="testi">
-        <div class="testi__stars" aria-hidden="true">
-          <svg viewBox="0 0 16 16"><path d="M8 1L9.9 5.6L15 6L11.2 9.3L12.4 14.3L8 11.7L3.6 14.3L4.8 9.3L1 6L6.1 5.6L8 1Z"/></svg>
-          <svg viewBox="0 0 16 16"><path d="M8 1L9.9 5.6L15 6L11.2 9.3L12.4 14.3L8 11.7L3.6 14.3L4.8 9.3L1 6L6.1 5.6L8 1Z"/></svg>
-          <svg viewBox="0 0 16 16"><path d="M8 1L9.9 5.6L15 6L11.2 9.3L12.4 14.3L8 11.7L3.6 14.3L4.8 9.3L1 6L6.1 5.6L8 1Z"/></svg>
-          <svg viewBox="0 0 16 16"><path d="M8 1L9.9 5.6L15 6L11.2 9.3L12.4 14.3L8 11.7L3.6 14.3L4.8 9.3L1 6L6.1 5.6L8 1Z"/></svg>
-          <svg viewBox="0 0 16 16"><path d="M8 1L9.9 5.6L15 6L11.2 9.3L12.4 14.3L8 11.7L3.6 14.3L4.8 9.3L1 6L6.1 5.6L8 1Z"/></svg>
-        </div>
-        <p>"Our office build-out finished two weeks early with zero surprises on the final bill. Rare for a project this size — rarer still to say it felt effortless."</p>
-        <div class="testi__who">
-          <div class="testi__mono">AV</div>
-          <div><div class="name">Arjun Vora</div><div class="role">Managing Partner, Meridian Consulting</div></div>
         </div>
       </div>
       <div class="testi">
@@ -339,7 +305,7 @@
   <div class="wrap cta__inner reveal">
     <p class="eyebrow eyebrow--center eyebrow--light">Start Your Project</p>
     <h2>Let's Design Your<br>Dream Space.</h2>
-    <p class="lede mx-auto" style="text-align:center;color:rgba(255,255,255,.65)">Share a few details about your space and timeline — our design team will reach out within one business day.</p>
+    <p class="lede mx-auto" style="text-align:center;color:rgba(255,255,255,.65)">Share a few details about your space and timeline — I'll personally get back to you within one business day.</p>
     <div class="cta__actions" style="margin-top:38px">
       <a href="https://wa.me/919106544247?text=Hi,%20I'd%20like%20to%20discuss%20my%20interior%20design%20project." class="btn btn--primary">Book Consultation</a>
       <a href="https://wa.me/919106544247?text=Hi,%20I'd%20like%20to%20discuss%20my%20interior%20design%20project." class="btn btn--on-dark">
@@ -410,6 +376,7 @@
   <svg viewBox="0 0 32 32" fill="none"><path d="M16 4C9.4 4 4 9.4 4 16c0 2.2.6 4.3 1.7 6.1L4 28l6.1-1.6A12 12 0 1016 4z" stroke="currentColor" stroke-width="1.2"/><path d="M11.2 11.4c.3-.7.6-.7.9-.7h.7c.2 0 .5 0 .7.5.3.6 1 2.1 1 2.3.1.2.1.4 0 .6-.1.2-.2.3-.4.5-.2.2-.4.4-.5.6-.2.2-.4.4-.2.8.3.4 1.1 1.7 2.3 2.7 1.6 1.3 2.9 1.7 3.3 1.9.4.2.7.2.9-.1.3-.3.9-1.1 1.2-1.5.3-.4.6-.3 1-.2.4.2 2.6 1.2 3 1.4.4.2.7.3.8.5.1.2.1 1-.3 2s-2.2 1.8-3 1.9c-.8.1-1.7.2-5.5-1.2-4.6-1.8-7.5-6.4-7.7-6.7-.2-.3-1.8-2.4-1.8-4.6 0-2.2 1.2-3.3 1.6-3.7z" fill="currentColor"/></svg>
 </a>
 
+<script src="mesh-gradient.js"></script>
 <script src="main.js"></script>
 </body>
 </html>
