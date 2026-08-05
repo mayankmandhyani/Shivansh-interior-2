@@ -132,6 +132,20 @@ p{color:var(--ink-70)}
   .reveal,.reveal-stagger > *{opacity:1 !important;transform:none !important}
 }
 
+/* ---------- Entrance cascade (nav + hero, plays once on load) ----------
+   Separate from .reveal on purpose: .reveal is scroll-triggered by
+   IntersectionObserver in main.js, but the nav and hero are visible
+   the instant the page loads, so this is a pure-CSS animation with a
+   staggered animation-delay per element instead — no JS wiring needed. */
+@keyframes riseIn{
+  from{opacity:0;filter:blur(14px);transform:translateY(26px)}
+  to{opacity:1;filter:blur(0);transform:translateY(0)}
+}
+.rise{opacity:0;animation:riseIn 1s var(--ease) forwards}
+@media (prefers-reduced-motion: reduce){
+  .rise{opacity:1;animation:none;filter:none;transform:none}
+}
+
 /* ---------- Placeholder media panels ----------
    Stand-ins for real photography: a warm, editorial gradient plus a
    fine-line motif from the studio's "drafting mark" system (arch,
