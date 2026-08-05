@@ -20,6 +20,7 @@
       <svg class="nav__mark" viewBox="0 0 34 34" fill="none" aria-hidden="true"><path d="M3 3H14M3 3V14" stroke="currentColor" stroke-width="1.3"/><path d="M31 31H20M31 31V20" stroke="currentColor" stroke-width="1.3"/><circle cx="17" cy="17" r="2" fill="currentColor"/></svg>
       Shivansh <strong>Interiors</strong>
     </a>
+    <div class="nav__backdrop" id="navBackdrop" aria-hidden="true"></div>
     <nav class="nav__links" id="navLinks">
       <a href="index.html" data-page="index.html">Home</a>
       <a href="about.html" data-page="about.html">About</a>
@@ -224,6 +225,43 @@
   </div>
 </section>
 
+<!-- ============ UP CLOSE (3D tilt cards) ============
+     Cursor-driven 3D depth effect — technique adapted from a CodePen
+     original (MIT licensed: https://codepen.io/dazulu/pen/VVZrQv by
+     Adrian Payne), rebuilt with the site's own content/media system
+     rather than pasted in as-is. Desktop/mouse only by design — a
+     cursor-position effect has no honest touch equivalent, so it's
+     skipped entirely below the hover-capable breakpoint rather than
+     faked. See tilt-cards.js. -->
+<section class="section" id="up-close">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-head__title">
+        <p class="eyebrow">Up Close</p>
+        <h2 style="margin-top:20px">Every Detail,<br>Considered</h2>
+      </div>
+      <p class="lede">Move your cursor across the frame — the same attention to detail these rooms were designed with, at a smaller scale.</p>
+    </div>
+
+    <div class="tilt-stage reveal" id="tiltStage">
+      <div class="tilt-cards" id="tiltCards">
+        <div class="tilt-card" data-media="media--b" data-title="Whitefield Garden Villa" data-location="Whitefield, Bengaluru" data-tag="Luxury Villa" data-desc="A four-bedroom villa designed around a central courtyard, blurring the line between interior and garden with full-height pivoting glass doors and continuous stone flooring." data-year="2022" data-area="6,100 sq.ft" data-scope="Full Turnkey">
+          <span class="tilt-card__img"><span class="media media--b"><span class="media__zoom"></span></span></span>
+          <span class="tilt-card__caption"><span class="k">Villa</span><span class="t">Whitefield Garden Villa</span></span>
+        </div>
+        <div class="tilt-card" data-media="media--c" data-title="Bandra Loft" data-location="Bandra West, Mumbai" data-tag="Apartment" data-desc="A compact 1,450 sq.ft. loft for a young couple, solved with custom multi-function joinery and a restrained material palette that makes the space read twice its size." data-year="2023" data-area="1,450 sq.ft" data-scope="Interior Design">
+          <span class="tilt-card__img"><span class="media media--c"><span class="media__zoom"></span></span></span>
+          <span class="tilt-card__caption"><span class="k">Apartment</span><span class="t">Bandra Loft</span></span>
+        </div>
+        <div class="tilt-card" data-media="media--d" data-title="The Quiet Room" data-location="Whitefield, Bengaluru" data-tag="Bedroom" data-desc="A guest suite within the Whitefield villa, designed to feel like a boutique hotel room — deliberately spare, with a single striking material moment in the fluted headboard wall." data-year="2022" data-area="380 sq.ft" data-scope="Interior Design">
+          <span class="tilt-card__img"><span class="media media--d"><span class="media__zoom"></span></span></span>
+          <span class="tilt-card__caption"><span class="k">Bedroom</span><span class="t">The Quiet Room</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ CTA ============ -->
 <section class="cta" id="contact">
   <div class="cta__grid" aria-hidden="true"></div>
@@ -331,6 +369,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="parallax.js"></script>
+<script src="tilt-cards.js"></script>
 <script src="main.js"></script>
 </body>
 </html>

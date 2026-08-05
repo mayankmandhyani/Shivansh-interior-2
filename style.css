@@ -39,7 +39,7 @@
 }
 
 /* ---------- Reset ---------- */
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{scroll-behavior:smooth}
 @media (prefers-reduced-motion: reduce){
   html{scroll-behavior:auto}
@@ -178,7 +178,7 @@ p{color:var(--ink-70)}
    layout — a static collage rather than a broken/invisible one. */
 .parallax-hero{
   position:relative;
-  height:100svh;min-height:640px;
+  height:100vh;height:100svh;min-height:640px;
   background:var(--white);
   overflow:hidden;
 }
@@ -308,7 +308,7 @@ p{color:var(--ink-70)}
 .nav__toggle span:nth-child(2){top:50%;transform:translateY(-50%)}
 .nav__toggle span:nth-child(3){bottom:0}
 
-.nav.is-scrolled{background:rgba(253,251,250,.92);backdrop-filter:blur(14px);border-color:var(--line-soft);box-shadow:0 8px 30px -20px rgba(20,16,20,.25)}
+.nav.is-scrolled{background:rgba(253,251,250,.92);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-color:var(--line-soft);box-shadow:0 8px 30px -20px rgba(20,16,20,.25)}
 .nav.is-scrolled .nav__logo,.nav.is-scrolled .nav__toggle{color:var(--ink)}
 .nav.is-scrolled .nav__links a{color:var(--ink-70)}
 .nav.is-scrolled .nav__links a.is-active{color:var(--gold-dim)}
@@ -325,23 +325,59 @@ p{color:var(--ink-70)}
 .nav--solid .nav__cta .btn--on-dark:hover{background:var(--ink);color:var(--white)}
 
 @media (max-width:920px){
-  .nav__links{
-    position:fixed;inset:0 0 auto 0;top:0;
-    flex-direction:column;align-items:flex-start;gap:0;
-    background:var(--charcoal);padding:110px var(--gutter) 40px;
-    transform:translateY(-100%);transition:transform .55s var(--ease);
+  .nav__toggle{display:block}
+
+  /* Real backdrop — click-outside-to-close target, and visually
+     dims whatever's still peeking past the drawer on short viewports. */
+  .nav__backdrop{
+    position:fixed;inset:0;z-index:1;
+    background:rgba(19,7,13,.55);
+    opacity:0;visibility:hidden;
+    transition:opacity .4s var(--ease), visibility 0s .4s;
   }
-  .nav__links.is-open{transform:translateY(0)}
+  .nav__backdrop.is-open{
+    opacity:1;visibility:visible;
+    transition:opacity .4s var(--ease), visibility 0s 0s;
+  }
+
+  .nav__links{
+    position:fixed;inset:0 0 auto 0;top:0;z-index:2;
+    flex-direction:column;align-items:flex-start;gap:0;
+    background:var(--charcoal);
+    padding:110px var(--gutter) calc(40px + env(safe-area-inset-bottom, 0px));
+    max-height:100vh;max-height:100dvh;
+    overflow-y:auto;-webkit-overflow-scrolling:touch;
+    transform:translateY(-100%);
+    /* visibility (not just the off-screen transform) is what
+       guarantees the closed drawer can never be tabbed into or
+       accidentally hit-tested — opacity/transform alone can't fully
+       rule that out. Delayed on close so the slide-out is still
+       visible; instant on open so it's interactive immediately. */
+    visibility:hidden;
+    transition:transform .55s var(--ease), visibility 0s .55s;
+  }
+  .nav__links.is-open{
+    transform:translateY(0);
+    visibility:visible;
+    transition:transform .55s var(--ease), visibility 0s 0s;
+  }
   .nav__links a{color:var(--white);font-size:1rem;width:100%;padding-block:16px;border-bottom:1px solid rgba(255,255,255,.1)}
   .nav__links a::after{display:none}
   .nav__cta{display:none}
   .nav__links .nav__cta-mobile{display:inline-flex;margin-top:24px}
-  .nav__toggle{display:block}
+
+  /* The floating WhatsApp button sits at z-index:200 — above the
+     drawer's own stacking (z-index:100 on .nav). Left alone it would
+     visually float on top of the open menu. Hide it while open. */
+  body.nav-is-open .wa-float{
+    opacity:0;visibility:hidden;pointer-events:none;
+    transition:opacity .3s var(--ease), visibility 0s .3s;
+  }
 }
 
 /* ---------- Hero ---------- */
 .hero{
-  position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;
+  position:relative;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;
   color:var(--white);overflow:hidden;background:var(--charcoal);
 }
 .hero__media{position:absolute;inset:0}
@@ -369,17 +405,26 @@ p{color:var(--ink-70)}
 .section{padding-block:clamp(80px,10vw,150px)}
 
 /* ---------- Seam bridges ----------
-   The wine-black hero and the wine-black CTA are the only two dark
-   zones on the page; everywhere they meet a light section, blend the
-   boundary with a short gradient instead of a hard color cut, so the
-   two colour families read as one continuous palette rather than a
-   dark page bolted onto a light one. Sized to sit inside the
-   section's own top padding, so it never has to fight real content. */
-#about{position:relative}
-#about::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:130px;z-index:0;
-  background:linear-gradient(180deg, var(--charcoal) 0%, transparent 100%);
-  pointer-events:none;
+   Hero -> #about: a true overlap blend, not a color-matching guess.
+   #about is pulled up by 40px (negative margin) so its top edge sits
+   INSIDE the hero's own box, then #about's own background is masked
+   from fully transparent (revealing the hero's actual rendered
+   pixels underneath — whatever the animated mesh gradient + scrim
+   currently look like, guaranteed pixel-identical since it's the
+   same pixels, not an approximation) to fully opaque by the point
+   where hero's box actually ends. Below that, #about renders
+   normally. 40px is deliberately small: it's comfortably inside
+   hero's own bottom padding (min 64px) and stops exactly at the
+   scroll-cue's bottom edge (bottom:40px), so neither hero's text nor
+   the scroll cue ever sits inside the blended zone.
+   -webkit-mask-image is required — this fails silently (no blend,
+   but no breakage either) on Safari/iOS without it. */
+#about{
+  position:relative;z-index:1;
+  background:var(--white);
+  margin-top:-40px;
+  -webkit-mask-image:linear-gradient(to bottom, transparent 0, #000 40px, #000 100%);
+          mask-image:linear-gradient(to bottom, transparent 0, #000 40px, #000 100%);
 }
 .cta::before{
   content:'';position:absolute;top:0;left:0;right:0;height:110px;z-index:0;
@@ -536,7 +581,7 @@ p{color:var(--ink-70)}
 
 /* ---------- WhatsApp float button ---------- */
 .wa-float{
-  position:fixed;right:26px;bottom:26px;z-index:200;
+  position:fixed;right:26px;bottom:calc(26px + env(safe-area-inset-bottom, 0px));z-index:200;
   width:60px;height:60px;border-radius:50%;
   background:var(--charcoal);color:var(--white);
   display:flex;align-items:center;justify-content:center;
@@ -549,7 +594,7 @@ p{color:var(--ink-70)}
 .wa-float__ring{position:absolute;inset:-1px;border-radius:50%;border:1px solid var(--gold);opacity:.6;animation:waPulse 2.6s var(--ease) infinite}
 @keyframes waPulse{0%{transform:scale(1);opacity:.55}100%{transform:scale(1.5);opacity:0}}
 @media (prefers-reduced-motion:reduce){.wa-float__ring{animation:none;display:none}}
-@media (max-width:560px){.wa-float{width:54px;height:54px;right:18px;bottom:18px}}
+@media (max-width:560px){.wa-float{width:54px;height:54px;right:18px;bottom:calc(18px + env(safe-area-inset-bottom, 0px))}}
 
 /* ---------- Page hero (About / Projects — shorter, non full-bleed-video style) ---------- */
 .page-hero{position:relative;min-height:62vh;display:flex;align-items:flex-end;color:var(--white);background:var(--charcoal);overflow:hidden}
@@ -574,13 +619,69 @@ p{color:var(--ink-70)}
 .filter-btn:hover{border-color:var(--ink)}
 .filter-btn.is-active{background:var(--ink);border-color:var(--ink);color:var(--white)}
 
+/* ---------- Up Close (3D tilt cards, Projects page) ----------
+   Mechanics adapted from the CodePen credited in the HTML comment
+   above the markup. .tilt-stage holds the perspective; .tilt-cards
+   is the group that rotates as one rigid unit (set via inline style
+   by tilt-cards.js); each .tilt-card sits at its own depth via
+   translateZ, and its .tilt-card__img layer drifts independently for
+   the layered parallax read. Reuses the site's existing .media
+   placeholder system rather than inventing new imagery. */
+.tilt-stage{
+  perspective:1800px;
+  display:flex;justify-content:center;
+  padding-block:12px 4px;
+}
+.tilt-cards{
+  display:inline-flex;gap:clamp(18px,3vw,32px);
+  transform-style:preserve-3d;
+  transform-origin:50% 50%;
+  transition:transform .5s var(--ease);
+  will-change:transform;
+}
+.tilt-card{
+  position:relative;
+  width:clamp(150px,18vw,220px);
+  height:clamp(210px,26vw,300px);
+  border-radius:20px;overflow:hidden;cursor:pointer;
+  transform:translateZ(35px);
+  transform-style:preserve-3d;
+  box-shadow:0 20px 50px -20px rgba(20,16,20,.35);
+  transition:transform .35s var(--ease), box-shadow .35s var(--ease);
+}
+.tilt-card:hover{transform:translateZ(60px);box-shadow:0 30px 60px -16px rgba(20,16,20,.45)}
+.tilt-card__img{position:absolute;inset:-14px;transition:transform .25s var(--ease);will-change:transform}
+.tilt-card__img .media{height:100%;border:0;border-radius:0}
+.tilt-card__caption{
+  position:absolute;left:0;right:0;bottom:0;z-index:2;padding:18px 20px;
+  background:linear-gradient(0deg, rgba(19,7,13,.85) 0%, rgba(19,7,13,0) 68%);
+  color:var(--white);text-align:left;pointer-events:none;
+}
+.tilt-card__caption .k{font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);display:block}
+.tilt-card__caption .t{display:block;font-family:var(--serif);font-size:1.15rem;margin-top:4px}
+
+@media (max-width:760px), (hover:none){
+  /* Cursor-tilt has no honest touch equivalent — drop the 3D rig
+     entirely rather than fake it, and lay the same three cards out
+     as a plain static row/stack. */
+  .tilt-stage{perspective:none;padding-block:0}
+  .tilt-cards{transform:none !important;flex-wrap:wrap;justify-content:center}
+  .tilt-card{transform:none !important;box-shadow:0 16px 34px -18px rgba(20,16,20,.3)}
+  .tilt-card:hover{transform:none !important}
+  .tilt-card__img{inset:0}
+}
+@media (max-width:520px){
+  .tilt-cards{flex-direction:column;align-items:center}
+  .tilt-card{width:min(320px,86vw);height:340px}
+}
+
 /* ---------- Project grid (Projects page) ---------- */
 .pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,2.4vw,34px)}
 .pcard{cursor:pointer}
 .pcard__media{position:relative;overflow:hidden}
 .pcard__media .media{--ar:4/5}
 .pcard__media:hover .media__zoom{transform:scale(1.08)}
-.pcard__tag{position:absolute;top:18px;left:18px;z-index:3;background:rgba(27,12,19,.75);backdrop-filter:blur(6px);color:var(--white);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;padding:8px 14px;border-radius:var(--radius-pill);border:1px solid rgba(255,255,255,.25)}
+.pcard__tag{position:absolute;top:18px;left:18px;z-index:3;background:rgba(27,12,19,.75);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color:var(--white);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;padding:8px 14px;border-radius:var(--radius-pill);border:1px solid rgba(255,255,255,.25)}
 .pcard__meta{display:flex;justify-content:space-between;align-items:flex-start;margin-top:20px;gap:12px}
 .pcard__meta h3{font-size:1.35rem}
 .pcard__meta .loc{font-size:.78rem;color:var(--ink-55);letter-spacing:.04em;margin-top:6px;display:flex;align-items:center;gap:6px}
@@ -595,7 +696,7 @@ p{color:var(--ink-70)}
 /* ---------- Project modal / lightbox ---------- */
 .pmodal{position:fixed;inset:0;z-index:300;visibility:hidden;opacity:0;transition:opacity .5s var(--ease), visibility 0s .5s}
 .pmodal.is-open{visibility:visible;opacity:1;transition:opacity .5s var(--ease)}
-.pmodal__scrim{position:absolute;inset:0;background:rgba(19,7,13,.86);backdrop-filter:blur(6px)}
+.pmodal__scrim{position:absolute;inset:0;background:rgba(19,7,13,.86);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 .pmodal__panel{
   position:relative;z-index:2;max-width:1040px;margin:5vh auto;background:var(--white);
   max-height:90vh;overflow-y:auto;

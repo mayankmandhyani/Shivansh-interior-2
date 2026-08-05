@@ -2,6 +2,41 @@
 (() => {
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* ---------- Shared scroll lock ----------
+     Used by both the mobile nav drawer and the project modal. Plain
+     `overflow:hidden` on body is what most sites use, but on iOS
+     Safari it lets the page rubber-band/scroll behind the fixed
+     overlay and can jump the scroll position when toggled. Locking
+     via `position:fixed` on body (saving/restoring scrollY) is the
+     standard fix. A simple lock counter means the nav and modal can
+     never fight over body state even if something ever calls both. */
+  let scrollLockCount = 0;
+  let savedScrollY = 0;
+
+  const lockScroll = () => {
+    if (scrollLockCount === 0) {
+      savedScrollY = window.scrollY || window.pageYOffset || 0;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${savedScrollY}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.classList.add('no-scroll');
+    }
+    scrollLockCount++;
+  };
+
+  const unlockScroll = () => {
+    scrollLockCount = Math.max(0, scrollLockCount - 1);
+    if (scrollLockCount === 0) {
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.classList.remove('no-scroll');
+      window.scrollTo(0, savedScrollY);
+    }
+  };
+
   /* ---------- Navbar scroll state ---------- */
   const nav = document.querySelector('.nav');
   if (nav && !nav.classList.contains('nav--solid')) {
@@ -13,20 +48,67 @@
     window.addEventListener('scroll', onScroll, { passive: true });
   }
 
-  /* ---------- Mobile nav toggle ---------- */
+  /* ---------- Mobile nav toggle ----------
+     Single source of truth for open/closed state (`isOpen`), so the
+     drawer, backdrop, toggle button and body scroll lock can never
+     disagree with each other — the "sometimes opens with nothing
+     visible / sometimes doesn't open" symptoms were a knock-on effect
+     of state living in several places (a CSS class here, a body
+     class there) instead of one place. Every listener is bound
+     exactly once, here, on page load. */
   const toggle = document.querySelector('.nav__toggle');
   const links = document.querySelector('.nav__links');
+  const backdrop = document.querySelector('.nav__backdrop');
+
   if (toggle && links) {
-    toggle.addEventListener('click', () => {
-      const open = links.classList.toggle('is-open');
-      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-      document.body.classList.toggle('no-scroll', open);
-    });
-    links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    let isOpen = false;
+    let lastToggleAt = 0;
+    const TOGGLE_DEBOUNCE_MS = 350; // ~= the drawer's own .55s slide, felt-cooldown
+
+    const openMenu = () => {
+      if (isOpen) return;
+      isOpen = true;
+      links.classList.add('is-open');
+      if (backdrop) backdrop.classList.add('is-open');
+      document.body.classList.add('nav-is-open');
+      toggle.setAttribute('aria-expanded', 'true');
+      lockScroll();
+    };
+
+    const closeMenu = () => {
+      if (!isOpen) return;
+      isOpen = false;
       links.classList.remove('is-open');
+      if (backdrop) backdrop.classList.remove('is-open');
+      document.body.classList.remove('nav-is-open');
       toggle.setAttribute('aria-expanded', 'false');
-      document.body.classList.remove('no-scroll');
-    }));
+      unlockScroll();
+    };
+
+    toggle.addEventListener('click', () => {
+      const now = Date.now();
+      if (now - lastToggleAt < TOGGLE_DEBOUNCE_MS) return; // debounce rapid repeated taps
+      lastToggleAt = now;
+      if (isOpen) closeMenu(); else openMenu();
+    });
+
+    // Click outside (the backdrop) closes the menu.
+    if (backdrop) backdrop.addEventListener('click', closeMenu);
+
+    // Clicking any nav link closes the menu.
+    links.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+
+    // Escape closes the menu.
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isOpen) closeMenu();
+    });
+
+    // Safety net: force-closed if the viewport crosses back to
+    // desktop width while open (e.g. rotating a tablet), so state
+    // can never get stuck with body scroll locked on desktop.
+    window.addEventListener('resize', () => {
+      if (isOpen && window.innerWidth > 920) closeMenu();
+    });
   }
 
   /* ---------- Scroll-reveal ---------- */
@@ -84,6 +166,7 @@
     const modalScope = modal.querySelector('[data-modal-scope]');
     const closeBtn = modal.querySelector('.pmodal__close');
     const scrim = modal.querySelector('.pmodal__scrim');
+    let modalOpen = false;
 
     const openModal = (card) => {
       const d = card.dataset;
@@ -96,14 +179,17 @@
       if (modalArea) modalArea.textContent = d.area || '—';
       if (modalScope) modalScope.textContent = d.scope || '—';
       modal.classList.add('is-open');
-      document.body.classList.add('no-scroll');
+      modalOpen = true;
+      lockScroll();
     };
     const closeModal = () => {
+      if (!modalOpen) return;
       modal.classList.remove('is-open');
-      document.body.classList.remove('no-scroll');
+      modalOpen = false;
+      unlockScroll();
     };
 
-    document.querySelectorAll('.pcard, .masonry__item').forEach(card => {
+    document.querySelectorAll('.pcard, .masonry__item, .tilt-card').forEach(card => {
       card.addEventListener('click', () => openModal(card));
     });
     closeBtn && closeBtn.addEventListener('click', closeModal);
