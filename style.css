@@ -169,6 +169,69 @@ p{color:var(--ink-70)}
 .testimonials--2{grid-template-columns:repeat(2,1fr);max-width:840px;margin-inline:auto}
 @media (max-width:700px){.testimonials--2{grid-template-columns:1fr;max-width:480px}}
 
+/* ---------- Parallax hero (Projects page) ----------
+   GSAP/ScrollTrigger drives this; see parallax.js. Deliberately no
+   opacity:0 / scale here as a static rule — the JS sets that hidden
+   starting state itself, right before it defines the entrance tween.
+   If the CDN fails, is blocked, or JS is off, these rules never run
+   and the images simply sit fully visible in their natural asymmetric
+   layout — a static collage rather than a broken/invisible one. */
+.parallax-hero{
+  position:relative;
+  height:100svh;min-height:640px;
+  background:var(--white);
+  overflow:hidden;
+}
+.parallax-hero__crumb{
+  position:absolute;top:130px;left:var(--gutter);z-index:6;
+  display:flex;gap:10px;align-items:center;
+  font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-55);
+}
+.parallax-hero__crumb a:hover{color:var(--gold-dim)}
+.parallax-hero__crumb svg{width:11px;height:11px}
+
+.parallax-hero__stage{position:absolute;inset:0}
+
+.ph-img{
+  position:absolute;margin:0;
+  border-radius:24px;overflow:hidden;
+  box-shadow:0 30px 70px -30px rgba(20,16,20,.28);
+  will-change:transform;
+}
+.ph-img .media{--ar:auto;height:100%;border:0;border-radius:24px}
+.ph-img__inner{transition:transform .6s var(--ease)}
+@media (hover:hover){
+  .ph-img:hover .ph-img__inner{transform:scale(1.045) rotate(.4deg)}
+  .ph-img:hover{box-shadow:0 40px 90px -26px rgba(20,16,20,.36)}
+}
+
+.ph-img--1{left:4%;top:9%;width:19%;aspect-ratio:3/4;z-index:2}
+.ph-img--2{left:76%;top:5%;width:16%;aspect-ratio:1/1;z-index:3}
+.ph-img--3{left:2%;top:57%;width:21%;aspect-ratio:4/3;z-index:1}
+.ph-img--4{left:69%;top:49%;width:22%;aspect-ratio:3/4;z-index:4}
+.ph-img--5{left:55%;top:15%;width:11%;aspect-ratio:1/1;z-index:5}
+.ph-img--6{left:37%;top:76%;width:13%;aspect-ratio:4/5;z-index:2}
+
+.parallax-hero__content{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  z-index:10;text-align:center;max-width:640px;padding-inline:24px;width:100%;
+}
+.parallax-hero__content h1{margin-block:22px 22px}
+.parallax-hero__content .lede{margin-inline:auto}
+.parallax-hero__actions{display:flex;justify-content:center;gap:18px;margin-top:36px;flex-wrap:wrap}
+
+@media (max-width:900px){
+  .parallax-hero{height:auto;min-height:0;padding:120px var(--gutter) 64px;overflow:visible}
+  .parallax-hero__crumb{position:static;margin-bottom:24px}
+  .parallax-hero__content{position:static;transform:none;max-width:none;padding-inline:0}
+  .parallax-hero__stage{
+    position:static;margin-top:52px;
+    display:grid;grid-template-columns:repeat(2,1fr);gap:16px;
+  }
+  .ph-img{position:static !important;width:100% !important;aspect-ratio:4/5 !important}
+  .ph-img--5{aspect-ratio:1/1 !important}
+}
+
 /* ---------- Placeholder media panels ----------
    Stand-ins for real photography: a warm, editorial gradient plus a
    fine-line motif from the studio's "drafting mark" system (arch,
@@ -182,6 +245,7 @@ p{color:var(--ink-70)}
 .media{
   position:relative;overflow:hidden;background:var(--stone);
   aspect-ratio:var(--ar, 4/5);
+  border:1px solid var(--line);
 }
 .media::after{
   content:'';position:absolute;inset:0;z-index:0;
@@ -205,7 +269,7 @@ p{color:var(--ink-70)}
 .media--b{--c1:#140a10;--c2:#3f1a30;--c3:#09050a;--m1:70deg;--motif:url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20200%20200%27%3E%3Cpath%20d=%27M70%2042h60M76%2042v106M124%2042v106M64%20148h72%27%20fill=%27none%27%20stroke=%27rgba%28201,162,39,0.22%29%27%20stroke-width=%271.3%27/%3E%3Cpath%20d=%27M88%2062v66M112%2062v66%27%20fill=%27none%27%20stroke=%27rgba%28201,162,39,0.22%29%27%20stroke-width=%271.3%27/%3E%3C/svg%3E")}
 .media--c{--c1:#1a0b14;--c2:#6e1f45;--c3:#0d0610;--m1:25deg;--motif:url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20200%20200%27%3E%3Cpath%20d=%27M52%20122v-28a16%2016%200%200132%200v18h32v-18a16%2016%200%200132%200v28%27%20fill=%27none%27%20stroke=%27rgba%28201,162,39,0.22%29%27%20stroke-width=%271.3%27/%3E%3Cpath%20d=%27M52%20122v36h96v-36M52%20140h96M60%20158v14M148%20158v14%27%20fill=%27none%27%20stroke=%27rgba%28201,162,39,0.22%29%27%20stroke-width=%271.3%27/%3E%3C/svg%3E")}
 .media--d{--c1:#120810;--c2:#361529;--c3:#080407;--m1:200deg;--motif:url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20200%20200%27%3E%3Cpath%20d=%27M100%20172V46%27%20fill=%27none%27%20stroke=%27rgba%28201,162,39,0.22%29%27%20stroke-width=%271.3%27/%3E%3Cpath%20d=%27M100%2066q26-16%2036%206q-26%2010-36-6M100%2098q-26-16-36%206q26%2010%2036-6M100%20130q23-13%2033%206q-23%209-33-6%27%20fill=%27none%27%20stroke=%27rgba%28201,162,39,0.22%29%27%20stroke-width=%271.3%27/%3E%3C/svg%3E")}
-.media--stone{--c1:#f3e9e7;--c2:#e8d5d2;--c3:#dcc3c0;--motif:url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20200%20200%27%3E%3Cpath%20d=%27M42%2042h116v116H42z%27%20fill=%27none%27%20stroke=%27rgba%28201,162,39,0.18%29%27%20stroke-width=%271.3%27/%3E%3Cpath%20d=%27M42%20100h116M100%2042v116%27%20fill=%27none%27%20stroke=%27rgba%2817,17,17,0.14%29%27%20stroke-width=%271%27/%3E%3C/svg%3E")}
+.media--stone{--c1:#ECD8D3;--c2:#DBBAB1;--c3:#C89B8F;--motif:url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20200%20200%27%3E%3Cpath%20d=%27M42%2042h116v116H42z%27%20fill=%27none%27%20stroke=%27rgba%28201,162,39,0.24%29%27%20stroke-width=%271.3%27/%3E%3Cpath%20d=%27M42%20100h116M100%2042v116%27%20fill=%27none%27%20stroke=%27rgba%2820,16,20,0.16%29%27%20stroke-width=%271%27/%3E%3C/svg%3E")}
 .media--stone::before{opacity:.35}
 
 /* ---------- Navbar ---------- */
@@ -268,11 +332,6 @@ p{color:var(--ink-70)}
     transform:translateY(-100%);transition:transform .55s var(--ease);
   }
   .nav__links.is-open{transform:translateY(0)}
-  /* Guarantee visibility regardless of the load-time entrance
-     animation's timing — fixes the drawer opening onto links that
-     are still mid-fade (or briefly still opacity:0) if tapped in
-     the first ~1.3s after page load. */
-  .nav__links.is-open .rise{opacity:1 !important;filter:none !important;transform:none !important;animation:none !important}
   .nav__links a{color:var(--white);font-size:1rem;width:100%;padding-block:16px;border-bottom:1px solid rgba(255,255,255,.1)}
   .nav__links a::after{display:none}
   .nav__cta{display:none}
