@@ -133,19 +133,28 @@ p{color:var(--ink-70)}
 }
 
 /* ---------- Placeholder media panels ----------
-   These stand in for real photography. Each variant is a distinct
-   ink/stone/gold composition so panels don't repeat. Swap the element
-   for a real <img src="..." alt="..."> when photography is ready —
-   see HTML comments beside each usage. */
+   Stand-ins for real photography: a warm, editorial gradient plus a
+   fine-line motif from the studio's "drafting mark" system (arch,
+   colonnade, armchair, botanical, floor plan), so each panel reads as
+   an intentional graphic mark rather than a missing image. Swap the
+   .media__zoom element for a real <img src="..." alt="..."> when
+   photography is ready — see HTML comments beside each usage.
+   z-index map: ::after (gradient, 0) < .media__zoom / real <img> (1)
+   < ::before (gold corner frame, 2) — so a dropped-in photo always
+   shows above the placeholder and beneath the corner accent. */
 .media{
   position:relative;overflow:hidden;background:var(--stone);
   aspect-ratio:var(--ar, 4/5);
 }
 .media::after{
-  content:'';position:absolute;inset:0;
+  content:'';position:absolute;inset:0;z-index:0;
   background-image:
-    linear-gradient(var(--m1, 135deg), var(--c1,#20201c) 0%, var(--c2,#3a3729) 45%, var(--c3,#0e0d0b) 100%),
-    repeating-linear-gradient(115deg, rgba(255,255,255,.035) 0 2px, transparent 2px 64px);
+    var(--motif, none),
+    radial-gradient(circle at 1.5px 1.5px, rgba(255,255,255,.05) 1px, transparent 0),
+    linear-gradient(var(--m1, 145deg), var(--c1,#171310) 0%, var(--c2,#4a3521) 48%, var(--c3,#0b0907) 100%);
+  background-repeat:no-repeat, repeat, no-repeat;
+  background-position:center, 0 0, center;
+  background-size:52% auto, 3px 3px, cover;
 }
 .media::before{
   content:'';position:absolute;inset:0;z-index:2;pointer-events:none;
@@ -154,12 +163,12 @@ p{color:var(--ink-70)}
     linear-gradient(0deg, transparent 0 92%, var(--gold-10) 92% 100%);
   opacity:.6;
 }
-.media__zoom{position:absolute;inset:0;transition:transform 1.2s var(--ease)}
-.media--a{--c1:#23221d;--c2:#4b4530;--c3:#0e0d0b}
-.media--b{--c1:#1c1b19;--c2:#39372f;--c3:#0a0908;--m1:75deg}
-.media--c{--c1:#26241d;--c2:#524a32;--c3:#100f0c;--m1:20deg}
-.media--d{--c1:#1f1e1a;--c2:#3f3c30;--c3:#0c0b09;--m1:200deg}
-.media--stone{--c1:#efe9dc;--c2:#e2d9c4;--c3:#d8cdb2}
+.media__zoom{position:absolute;inset:0;z-index:1;width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
+.media--a{--c1:#181310;--c2:#5c3a24;--c3:#0b0907;--motif:url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20200%20200%27%3E%3Cpath%20d=%27M60%20178V88a40%2040%200%200180%200v90%27%20fill=%27none%27%20stroke=%27rgba%28201,162,39,0.22%29%27%20stroke-width=%271.3%27/%3E%3C/svg%3E")}
+.media--b{--c1:#151311;--c2:#4a3527;--c3:#0a0908;--m1:70deg;--motif:url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20200%20200%27%3E%3Cpath%20d=%27M70%2042h60M76%2042v106M124%2042v106M64%20148h72%27%20fill=%27none%27%20stroke=%27rgba%28201,162,39,0.22%29%27%20stroke-width=%271.3%27/%3E%3Cpath%20d=%27M88%2062v66M112%2062v66%27%20fill=%27none%27%20stroke=%27rgba%28201,162,39,0.22%29%27%20stroke-width=%271.3%27/%3E%3C/svg%3E")}
+.media--c{--c1:#1a1510;--c2:#6b4f27;--c3:#0d0b08;--m1:25deg;--motif:url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20200%20200%27%3E%3Cpath%20d=%27M52%20122v-28a16%2016%200%200132%200v18h32v-18a16%2016%200%200132%200v28%27%20fill=%27none%27%20stroke=%27rgba%28201,162,39,0.22%29%27%20stroke-width=%271.3%27/%3E%3Cpath%20d=%27M52%20122v36h96v-36M52%20140h96M60%20158v14M148%20158v14%27%20fill=%27none%27%20stroke=%27rgba%28201,162,39,0.22%29%27%20stroke-width=%271.3%27/%3E%3C/svg%3E")}
+.media--d{--c1:#14120f;--c2:#41331f;--c3:#0a0907;--m1:200deg;--motif:url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20200%20200%27%3E%3Cpath%20d=%27M100%20172V46%27%20fill=%27none%27%20stroke=%27rgba%28201,162,39,0.22%29%27%20stroke-width=%271.3%27/%3E%3Cpath%20d=%27M100%2066q26-16%2036%206q-26%2010-36-6M100%2098q-26-16-36%206q26%2010%2036-6M100%20130q23-13%2033%206q-23%209-33-6%27%20fill=%27none%27%20stroke=%27rgba%28201,162,39,0.22%29%27%20stroke-width=%271.3%27/%3E%3C/svg%3E")}
+.media--stone{--c1:#f1ecdf;--c2:#e6dcc4;--c3:#dcd0b2;--motif:url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%20200%20200%27%3E%3Cpath%20d=%27M42%2042h116v116H42z%27%20fill=%27none%27%20stroke=%27rgba%28201,162,39,0.18%29%27%20stroke-width=%271.3%27/%3E%3Cpath%20d=%27M42%20100h116M100%2042v116%27%20fill=%27none%27%20stroke=%27rgba%2817,17,17,0.14%29%27%20stroke-width=%271%27/%3E%3C/svg%3E")}
 .media--stone::before{opacity:.35}
 
 /* ---------- Navbar ---------- */
