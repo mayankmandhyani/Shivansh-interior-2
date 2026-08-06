@@ -361,7 +361,8 @@ p{color:var(--ink-70)}
     visibility:visible;
     transition:transform .55s var(--ease), visibility 0s 0s;
   }
-  .nav__links a{color:var(--white);font-size:1rem;width:100%;padding-block:16px;border-bottom:1px solid rgba(255,255,255,.1)}
+  #navLinks a{color:rgba(255,255,255,.68);font-size:1rem;width:100%;padding-block:16px;border-bottom:1px solid rgba(255,255,255,.1)}
+  #navLinks a.is-active{color:var(--gold)}
   .nav__links a::after{display:none}
   .nav__cta{display:none}
   .nav__links .nav__cta-mobile{display:inline-flex;margin-top:24px}
