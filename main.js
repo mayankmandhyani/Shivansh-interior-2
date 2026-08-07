@@ -158,6 +158,11 @@
   if (modal) {
     const modalMedia = modal.querySelector('.pmodal__hero .media');
     const modalImg = modal.querySelector('[data-modal-img]');
+    const modalGallery = [
+      modal.querySelector('[data-modal-gallery-1]'),
+      modal.querySelector('[data-modal-gallery-2]'),
+      modal.querySelector('[data-modal-gallery-3]')
+    ];
     const modalTitle = modal.querySelector('[data-modal-title]');
     const modalLoc = modal.querySelector('[data-modal-loc]');
     const modalTag = modal.querySelector('[data-modal-tag]');
@@ -173,6 +178,10 @@
       const d = card.dataset;
       if (modalMedia) modalMedia.className = 'media ' + (d.media || 'media--a');
       if (modalImg && d.img) { modalImg.src = d.img; modalImg.alt = d.title || ''; }
+      modalGallery.forEach((el, i) => {
+        const src = d['gallery-' + (i + 1)];
+        if (el && src) { el.src = src; el.alt = (d.title || '') + ' — detail ' + (i + 1); }
+      });
       if (modalTitle) modalTitle.textContent = d.title || '';
       if (modalLoc) modalLoc.textContent = d.location || '';
       if (modalTag) modalTag.textContent = d.tag || '';
@@ -202,7 +211,7 @@
   }
 
   /* ---------- Footer year ---------- */
-  document.querySelectorAll('[data-year]').forEach(el => {
+  document.querySelectorAll('[data-current-year]').forEach(el => {
     el.textContent = new Date().getFullYear();
   });
 })();
