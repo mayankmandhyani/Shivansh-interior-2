@@ -1,0 +1,51 @@
+SHIVANSH INTERIORS — DOMAIN REFERENCE
+======================================
+
+This site is flat, static HTML with no build step and no templating —
+there is no single config file the domain lives in. This document is
+the practical substitute: every exact location the domain string
+appears, so switching domains later is one clean find-and-replace
+pass across a known, complete list, not a hunt.
+
+CURRENT VALUE (GitHub Pages, live now):
+  https://mayankmandhyani.github.io/Shivansh-interior-2
+
+WHEN A CUSTOM DOMAIN IS CONNECTED:
+  Find-and-replace the exact string above with the new domain
+  (e.g. https://www.shivanshinteriors.com) across every file below.
+  Keep the trailing-slash / no-trailing-slash pattern exactly as it
+  already appears in each spot — don't add or remove one.
+
+EXACT LOCATIONS (6 files, 9 total occurrences):
+
+  index.html
+    - <link rel="canonical" href="...">
+    - <meta property="og:url" content="...">
+    - JSON-LD schema block, "url" field
+
+  about.html
+    - <link rel="canonical" href=".../about.html">
+    - <meta property="og:url" content=".../about.html">
+    - JSON-LD schema block, "url" field
+
+  projects.html
+    - <link rel="canonical" href=".../projects.html">
+    - <meta property="og:url" content=".../projects.html">
+    - JSON-LD schema block, "url" field
+
+  sitemap.xml
+    - All 3 <loc> entries
+
+  robots.txt
+    - Sitemap: line
+
+NOT AFFECTED BY A DOMAIN CHANGE (leave these alone):
+  - og:image / twitter:image on all 3 pages — these point directly to
+    Unsplash-hosted photo URLs, not your domain, so they work
+    regardless of what domain the site itself is served from.
+  - The WhatsApp number/links (wa.me/919106544247...) — unrelated to
+    site domain entirely.
+
+WHATSAPP BUSINESS NUMBER (unrelated to domain, noted here since it's
+the other value that appears repeatedly across files if it ever needs
+to change): +91 91065 44247, used as 919106544247 in every wa.me link.
