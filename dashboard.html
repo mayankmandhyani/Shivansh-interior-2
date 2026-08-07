@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Dashboard — Shivansh Interiors Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="admin.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<div class="admin-shell">
+  <aside class="admin-sidebar">
+    <div class="brand">
+      <svg viewBox="0 0 34 34" fill="none" aria-hidden="true"><path d="M3 3H14M3 3V14" stroke="currentColor" stroke-width="1.3"/><path d="M31 31H20M31 31V20" stroke="currentColor" stroke-width="1.3"/><circle cx="17" cy="17" r="2" fill="currentColor"/></svg>
+      <span>Admin</span>
+    </div>
+    <nav class="admin-nav">
+      <a href="dashboard.html" class="is-active">Dashboard</a>
+      <a href="#" aria-disabled="true" title="Coming in Phase 2">Projects</a>
+      <a href="#" aria-disabled="true" title="Coming in a later phase">Homepage</a>
+      <a href="#" aria-disabled="true" title="Coming in a later phase">Settings</a>
+    </nav>
+    <div class="signout">
+      <span id="userLabel">…</span><br>
+      <button id="signOutBtn">Sign out</button>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <div class="admin-header">
+      <h1 id="welcomeMsg">Welcome</h1>
+      <p>Here's what's happening with Shivansh Interiors right now.</p>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card"><div class="n" id="statTotal">–</div><div class="l">Total Projects</div></div>
+      <div class="stat-card"><div class="n" id="statFeatured">–</div><div class="l">Featured Projects</div></div>
+      <div class="stat-card"><div class="n" id="statDraft">–</div><div class="l">Draft Projects</div></div>
+      <div class="stat-card"><div class="n" id="statPublished">–</div><div class="l">Published Projects</div></div>
+      <div class="stat-card"><div class="n" id="statStorage">–</div><div class="l">Storage Used</div></div>
+    </div>
+
+    <div class="panel">
+      <span class="badge">Phase 1 — Foundation</span>
+      <h2 style="margin-top:14px">You're in. The foundation works.</h2>
+      <p>This confirms three things are wired correctly end to end: your Supabase project, the database schema and security policies, and this login. That's deliberately the whole scope of Phase 1 — everything above (the stat counts, "Recently Updated") is pulling real numbers from your actual database, not placeholders.</p>
+      <p>Not built yet, on purpose: creating/editing projects, image upload, and the Homepage/About/Contact/SEO/Settings screens. Building those against an unverified foundation would have meant a lot of code neither of us could actually test. Now that login works, tell Claude to build Project Management next — that's the natural, highest-value Phase 2.</p>
+    </div>
+
+    <div class="panel" id="recentPanel">
+      <h2>Recently Updated</h2>
+      <p id="recentEmpty">No projects yet — nothing to show until Phase 2 (Project Management) exists and you've created your first one.</p>
+    </div>
+  </main>
+</div>
+
+<script src="supabase-config.js"></script>
+<script src="admin-auth.js"></script>
+<script>
+  (async () => {
+    const profile = await requireAdmin();
+    if (!profile) return; // requireAdmin already redirected
+
+    document.getElementById('welcomeMsg').textContent = `Welcome, ${profile.full_name.split(' ')[0]}`;
+    document.getElementById('userLabel').textContent = profile.full_name;
+    document.getElementById('signOutBtn').addEventListener('click', signOutAdmin);
+
+    // Real counts against the real projects table.
+    const [{ count: total }, { count: featured }, { count: draft }, { count: published }] = await Promise.all([
+      supabaseClient.from('projects').select('*', { count: 'exact', head: true }),
+      supabaseClient.from('projects').select('*', { count: 'exact', head: true }).eq('is_featured', true),
+      supabaseClient.from('projects').select('*', { count: 'exact', head: true }).eq('status', 'draft'),
+      supabaseClient.from('projects').select('*', { count: 'exact', head: true }).eq('status', 'published'),
+    ]);
+
+    document.getElementById('statTotal').textContent = total ?? 0;
+    document.getElementById('statFeatured').textContent = featured ?? 0;
+    document.getElementById('statDraft').textContent = draft ?? 0;
+    document.getElementById('statPublished').textContent = published ?? 0;
+
+    // Storage usage: summed from media_library, which tracks file size per
+    // upload. (Supabase's JS client has no direct "bucket size" call, so
+    // this table is what makes that number possible at all.)
+    const { data: mediaRows } = await supabaseClient.from('media_library').select('file_size_bytes');
+    const totalBytes = (mediaRows || []).reduce((sum, r) => sum + (r.file_size_bytes || 0), 0);
+    const mb = (totalBytes / (1024 * 1024)).toFixed(1);
+    document.getElementById('statStorage').textContent = `${mb} MB`;
+
+    // Recently updated projects (only meaningful once Phase 2 exists).
+    const { data: recent } = await supabaseClient
+      .from('projects').select('title, status, updated_at')
+      .order('updated_at', { ascending: false }).limit(5);
+
+    if (recent && recent.length) {
+      document.getElementById('recentEmpty').remove();
+      const list = document.createElement('div');
+      recent.forEach(p => {
+        const row = document.createElement('p');
+        row.textContent = `${p.title} — ${p.status} — ${new Date(p.updated_at).toLocaleDateString()}`;
+        list.appendChild(row);
+      });
+      document.getElementById('recentPanel').appendChild(list);
+    }
+  })();
+</script>
+</body>
+</html>
