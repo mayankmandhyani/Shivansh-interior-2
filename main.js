@@ -157,6 +157,7 @@
   const modal = document.querySelector('.pmodal');
   if (modal) {
     const modalMedia = modal.querySelector('.pmodal__hero .media');
+    const modalImg = modal.querySelector('[data-modal-img]');
     const modalTitle = modal.querySelector('[data-modal-title]');
     const modalLoc = modal.querySelector('[data-modal-loc]');
     const modalTag = modal.querySelector('[data-modal-tag]');
@@ -170,7 +171,8 @@
 
     const openModal = (card) => {
       const d = card.dataset;
-      if (modalMedia) modalMedia.className = 'media media__zoom ' + (d.media || 'media--a');
+      if (modalMedia) modalMedia.className = 'media ' + (d.media || 'media--a');
+      if (modalImg && d.img) { modalImg.src = d.img; modalImg.alt = d.title || ''; }
       if (modalTitle) modalTitle.textContent = d.title || '';
       if (modalLoc) modalLoc.textContent = d.location || '';
       if (modalTag) modalTag.textContent = d.tag || '';
