@@ -14,7 +14,7 @@ async function requireAdmin() {
   const { data: { session } } = await supabaseClient.auth.getSession();
 
   if (!session) {
-    window.location.href = '/admin/index.html';
+    window.location.href = '/admin-login.html';
     return null;
   }
 
@@ -27,7 +27,7 @@ async function requireAdmin() {
   if (error || !profile) {
     // Logged in, but not an authorized admin (no admin_profiles row yet).
     await supabaseClient.auth.signOut();
-    window.location.href = '/admin/index.html?unauthorized=1';
+    window.location.href = '/admin-login.html?unauthorized=1';
     return null;
   }
 
@@ -36,5 +36,5 @@ async function requireAdmin() {
 
 async function signOutAdmin() {
   await supabaseClient.auth.signOut();
-  window.location.href = '/admin/index.html';
+  window.location.href = '/admin-login.html';
 }
