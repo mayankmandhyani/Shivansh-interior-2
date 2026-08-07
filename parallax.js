@@ -13,7 +13,7 @@
 (function () {
   if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
 
-  const section = document.querySelector('.parallax-hero');
+  const section = document.querySelector('.pin-collage');
   if (!section) return;
 
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;

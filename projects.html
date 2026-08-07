@@ -46,6 +46,11 @@
      in their natural (fully visible, static) position — see
      parallax.js for how that fallback works. -->
 <section class="parallax-hero" id="parallax">
+  <div class="hero__media">
+    <div class="mesh-gradient" id="heroGradient" aria-hidden="true"></div>
+  </div>
+  <div class="hero__scrim"></div>
+
   <div class="parallax-hero__crumb">
     <a href="index.html">Home</a>
     <svg viewBox="0 0 13 14" fill="none"><path d="M4 2L9 7L4 12" stroke="currentColor" stroke-width="1.3"/></svg>
@@ -58,17 +63,8 @@
     <p class="lede" style="text-align:center">We transform ordinary interiors into extraordinary living experiences through thoughtful design and timeless craftsmanship.</p>
     <div class="parallax-hero__actions">
       <a href="#portfolio-grid" class="btn btn--primary">View Our Projects</a>
-      <a data-cw-trigger href="https://wa.me/919106544247?text=Hi,%20I'd%20like%20to%20discuss%20my%20interior%20design%20project." class="btn btn--secondary">Book Consultation</a>
+      <a data-cw-trigger href="https://wa.me/919106544247?text=Hi,%20I'd%20like%20to%20discuss%20my%20interior%20design%20project." class="btn btn--on-dark">Book Consultation</a>
     </div>
-  </div>
-
-  <div class="parallax-hero__stage">
-    <figure class="ph-img ph-img--1"><div class="media media--a"><img class="media__zoom ph-img__inner" src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=1400&q=75" alt="Living room detail, Shivansh Interiors project" loading="lazy"></div></figure>
-    <figure class="ph-img ph-img--2"><div class="media media--c"><img class="media__zoom ph-img__inner" src="https://images.unsplash.com/photo-1682888813788-373f947aacb3?auto=format&fit=crop&w=1400&q=75" alt="Kitchen detail, Shivansh Interiors project" loading="lazy"></div></figure>
-    <figure class="ph-img ph-img--3"><div class="media media--stone"><img class="media__zoom ph-img__inner" src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=1400&q=75" alt="Villa exterior, Shivansh Interiors project" loading="lazy"></div></figure>
-    <figure class="ph-img ph-img--4"><div class="media media--d"><img class="media__zoom ph-img__inner" src="https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1400&q=75" alt="Bedroom suite, Shivansh Interiors project" loading="lazy"></div></figure>
-    <figure class="ph-img ph-img--5"><div class="media media--b"><img class="media__zoom ph-img__inner" src="https://images.unsplash.com/photo-1550053808-52a75a05955d?auto=format&fit=crop&w=1400&q=75" alt="Material detail, Shivansh Interiors project" loading="lazy"></div></figure>
-    <figure class="ph-img ph-img--6"><div class="media media--a"><img class="media__zoom ph-img__inner" src="https://images.unsplash.com/photo-1682184805271-11671b7ecf4c?auto=format&fit=crop&w=1400&q=75" alt="Living room, Shivansh Interiors project" loading="lazy"></div></figure>
   </div>
 </section>
 
@@ -360,9 +356,7 @@
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="parallax.js"></script>
+<script src="mesh-gradient.js"></script>
 <script src="tilt-cards.js"></script>
 <script src="main.js"></script>
 <script src="cw-loader.js" defer></script>
