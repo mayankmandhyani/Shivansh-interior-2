@@ -425,6 +425,8 @@ p{color:var(--ink-70)}
   linear-gradient(180deg, rgba(75,28,51,.35) 0%, rgba(75,28,51,.15) 30%, rgba(75,28,51,.55) 72%, rgba(32,11,21,.92) 100%);
 }
 .hero__content{position:relative;z-index:2;padding:0 var(--gutter) clamp(64px,9vw,120px)}
+.hero.pin-collage{justify-content:center}
+.hero.pin-collage .hero__content{z-index:10;padding-bottom:0}
 .hero__content .wrap{padding-inline:0}
 .hero__kicker{color:var(--gold-dim);margin-bottom:22px}
 .hero h1{max-width:14ch;margin-bottom:22px}
