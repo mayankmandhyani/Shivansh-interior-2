@@ -2,6 +2,20 @@
 (() => {
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* ---------- Image load failure fallback ----------
+     If any .media__zoom image ever fails to load (network hiccup, a
+     dead hotlinked URL, temporary CDN issue), fail gracefully instead
+     of leaving a blank gap or a browser's broken-image icon — hide
+     the img and let the existing decorative gradient (.media::after)
+     show through cleanly. Applies site-wide, present and future
+     images alike, via event delegation on the capture phase (image
+     load/error events don't bubble). */
+  document.addEventListener('error', (e) => {
+    if (e.target && e.target.classList && e.target.classList.contains('media__zoom')) {
+      e.target.setAttribute('data-load-failed', '');
+    }
+  }, true);
+
   /* ---------- Shared scroll lock ----------
      Used by both the mobile nav drawer and the project modal. Plain
      `overflow:hidden` on body is what most sites use, but on iOS
@@ -36,6 +50,61 @@
       window.scrollTo(0, savedScrollY);
     }
   };
+
+  /* ---------- Page loader ----------
+     Tracks real image load progress (not a fake animated counter) via
+     document.images + each image's own load/error event, so the
+     percentage actually reflects what's happening. window.load is the
+     definitive "everything's ready" signal that dismisses it. A small
+     minimum display time (skipped under reduced-motion) exists purely
+     so a very fast cached load doesn't just flash instead of reading
+     as a deliberate brand moment — never pads beyond real load time
+     by more than that. A hard timeout guarantees the page is never
+     permanently blocked if some resource never fires load/error. */
+  const loader = document.getElementById('pageLoader');
+  if (loader) {
+    const fill = document.getElementById('loaderFill');
+    const pct = document.getElementById('loaderPct');
+    lockScroll();
+
+    const imgs = Array.from(document.images);
+    const total = imgs.length || 1;
+    let loadedCount = 0;
+    let finished = false;
+
+    const update = () => {
+      const percent = Math.min(100, Math.round((loadedCount / total) * 100));
+      if (fill) fill.style.width = percent + '%';
+      if (pct) pct.textContent = percent + '%';
+    };
+
+    imgs.forEach((img) => {
+      if (img.complete) {
+        loadedCount++;
+      } else {
+        const mark = () => { loadedCount++; update(); };
+        img.addEventListener('load', mark, { once: true });
+        img.addEventListener('error', mark, { once: true });
+      }
+    });
+    update();
+
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      loadedCount = total;
+      update();
+      unlockScroll();
+      loader.classList.add('is-hidden');
+    };
+
+    const minDisplay = prefersReducedMotion ? 0 : 450;
+    const startedAt = Date.now();
+    window.addEventListener('load', () => {
+      setTimeout(finish, Math.max(0, minDisplay - (Date.now() - startedAt)));
+    });
+    setTimeout(finish, 6000); // safety net — never block the page indefinitely
+  }
 
   /* ---------- Navbar scroll state ---------- */
   const nav = document.querySelector('.nav');
