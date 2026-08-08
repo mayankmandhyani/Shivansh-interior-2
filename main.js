@@ -269,7 +269,7 @@
       unlockScroll();
     };
 
-    document.querySelectorAll('.pcard, .masonry__item, .tilt-card').forEach(card => {
+    document.querySelectorAll('.pcard').forEach(card => {
       card.addEventListener('click', () => openModal(card));
     });
     closeBtn && closeBtn.addEventListener('click', closeModal);

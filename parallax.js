@@ -75,7 +75,15 @@
     };
   });
 
-  /* ---------- Mobile: simple stacked reveal, no pin ---------- */
+  /* ---------- Mobile: simple stacked reveal, no pin ----------
+     Plays immediately on load rather than behind a ScrollTrigger.
+     This section is the hero — already fully in view from the very
+     first frame — so a trigger keyed to "scroll down until this
+     reaches 88% of the viewport" can never fire for it; there's no
+     downward scroll motion that gets an already-top-of-page element
+     there. Same category of fix as the Projects-page hero text
+     elsewhere in this build: content with nothing to scroll toward
+     shouldn't be gated behind a scroll-position trigger at all. */
   mm.add('(max-width: 900px)', () => {
     gsap.set(images, { opacity: 0, y: 24 });
     const anim = gsap.to(images, {
@@ -83,15 +91,10 @@
       y: 0,
       duration: 0.8,
       ease: 'power2.out',
-      stagger: 0.08,
-      scrollTrigger: {
-        trigger: '.parallax-hero__stage',
-        start: 'top 88%',
-        toggleActions: 'play none none reverse'
-      }
+      stagger: 0.08
     });
     return () => {
-      anim.scrollTrigger && anim.scrollTrigger.kill();
+      anim.kill();
     };
   });
 })();

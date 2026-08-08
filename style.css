@@ -638,62 +638,6 @@ p{color:var(--ink-70)}
 .filter-btn:hover{border-color:var(--ink)}
 .filter-btn.is-active{background:var(--ink);border-color:var(--ink);color:var(--white)}
 
-/* ---------- Up Close (3D tilt cards, Projects page) ----------
-   Mechanics adapted from the CodePen credited in the HTML comment
-   above the markup. .tilt-stage holds the perspective; .tilt-cards
-   is the group that rotates as one rigid unit (set via inline style
-   by tilt-cards.js); each .tilt-card sits at its own depth via
-   translateZ, and its .tilt-card__img layer drifts independently for
-   the layered parallax read. Reuses the site's existing .media
-   placeholder system rather than inventing new imagery. */
-.tilt-stage{
-  perspective:1800px;
-  display:flex;justify-content:center;
-  padding-block:12px 4px;
-}
-.tilt-cards{
-  display:inline-flex;gap:clamp(18px,3vw,32px);
-  transform-style:preserve-3d;
-  transform-origin:50% 50%;
-  transition:transform var(--dur-base) var(--ease);
-  will-change:transform;
-}
-.tilt-card{
-  position:relative;
-  width:clamp(150px,18vw,220px);
-  height:clamp(210px,26vw,300px);
-  border-radius:24px;overflow:hidden;cursor:pointer;
-  transform:translateZ(35px);
-  transform-style:preserve-3d;
-  box-shadow:0 20px 50px -20px rgba(47,17,32,.35);
-  transition:transform var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
-}
-.tilt-card:hover{transform:translateZ(60px);box-shadow:0 30px 60px -16px rgba(47,17,32,.45)}
-.tilt-card__img{position:absolute;inset:-14px;transition:transform var(--dur-fast) var(--ease);will-change:transform}
-.tilt-card__img .media{height:100%;border:0;border-radius:0}
-.tilt-card__caption{
-  position:absolute;left:0;right:0;bottom:0;z-index:2;padding:18px 20px;
-  background:linear-gradient(0deg, rgba(32,11,21,.85) 0%, rgba(32,11,21,0) 68%);
-  color:var(--white);text-align:left;pointer-events:none;
-}
-.tilt-card__caption .k{font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);display:block}
-.tilt-card__caption .t{display:block;font-family:var(--serif);font-size:1.15rem;margin-top:4px}
-
-@media (max-width:760px), (hover:none){
-  /* Cursor-tilt has no honest touch equivalent — drop the 3D rig
-     entirely rather than fake it, and lay the same three cards out
-     as a plain static row/stack. */
-  .tilt-stage{perspective:none;padding-block:0}
-  .tilt-cards{transform:none !important;flex-wrap:wrap;justify-content:center}
-  .tilt-card{transform:none !important;box-shadow:0 16px 34px -18px rgba(47,17,32,.3)}
-  .tilt-card:hover{transform:none !important}
-  .tilt-card__img{inset:0}
-}
-@media (max-width:520px){
-  .tilt-cards{flex-direction:column;align-items:center}
-  .tilt-card{width:min(320px,86vw);height:340px}
-}
-
 /* ---------- Project grid (Projects page) ---------- */
 .pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,2.4vw,34px)}
 .pcard{cursor:pointer}
