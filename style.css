@@ -248,25 +248,37 @@ p{color:var(--ink-70)}
     position:static;margin-top:52px;
     display:grid;grid-template-columns:repeat(2,1fr);gap:16px;
   }
-  .ph-img{position:static !important;width:100% !important;aspect-ratio:4/5 !important}
-  .ph-img--5{aspect-ratio:1/1 !important}
 }
 
 @media (max-width:920px){
-  /* Homepage's floating-collage hero: the shared .parallax-hero__stage /
-     .ph-img mobile rules above already switch the photos to a static
-     2-col grid — but .hero__media itself is still position:absolute
-     (correct on desktop, where it's the full-bleed background layer).
-     Left alone that would clip/overflow the now-in-flow photo grid
-     inside .hero's overflow:hidden bounds. Let it participate in
-     normal flow instead, and use flex order to keep the headline
-     visually first even though the photos come first in the markup
-     (desktop stacking doesn't care about source order since .hero__content
-     already sits above via z-index; mobile flex order does the same job
-     for static-flow layout). */
-  .hero.pin-collage{min-height:0;padding-top:160px}
-  .hero.pin-collage .hero__media{position:static;inset:auto;order:2}
-  .hero.pin-collage .hero__content{order:1}
+  /* Homepage hero, mobile only — desktop's scattered 6-photo collage
+     doesn't translate to a narrow screen the same way it works with
+     room to breathe on wide viewports, so mobile gets a different,
+     also-proven treatment instead: one full-bleed photo behind the
+     text with a scrim, the same pattern already used successfully on
+     the About/Projects page heroes. Desktop is untouched — none of
+     this is scoped outside max-width:920px. */
+  .hero.pin-collage{
+    min-height:78vh;min-height:78svh;
+    justify-content:flex-end;
+    padding-top:0;
+    color:var(--white);
+  }
+  .hero.pin-collage .hero__media{position:absolute;inset:0;order:initial}
+  .hero.pin-collage .parallax-hero__stage{position:absolute;inset:0;display:block;margin-top:0}
+  .hero.pin-collage .ph-img{display:none}
+  .hero.pin-collage .ph-img--1{
+    display:block;position:absolute;inset:0;z-index:0;
+    width:100%;height:100%;aspect-ratio:auto;
+  }
+  .hero.pin-collage .ph-img--1 .media,
+  .hero.pin-collage .ph-img--1 .media__zoom{width:100%;height:100%}
+  .hero.pin-collage .hero__scrim{display:block}
+  .hero.pin-collage .hero__content{order:initial}
+  .hero.pin-collage .hero__kicker{color:var(--gold)}
+  .hero.pin-collage .hero__sub{color:rgba(255,255,255,.78)}
+  .hero.pin-collage h1{color:var(--white)}
+  .hero.pin-collage .btn--secondary{background:transparent;color:var(--white);border-color:rgba(255,255,255,.5)}
   .hero.pin-collage .hero__scroll{display:none}
 }
 
@@ -423,7 +435,7 @@ p{color:var(--ink-70)}
 }
 .hero__media{position:absolute;inset:0}
 .hero__media .media{aspect-ratio:auto;height:100%;--ar:auto}
-.hero__scrim{position:absolute;inset:0;background:
+.hero__scrim{position:absolute;inset:0;display:none;background:
   linear-gradient(180deg, rgba(75,28,51,.35) 0%, rgba(75,28,51,.15) 30%, rgba(75,28,51,.55) 72%, rgba(32,11,21,.92) 100%);
 }
 .hero__content{position:relative;z-index:2;padding:0 var(--gutter) clamp(64px,9vw,120px)}
