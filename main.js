@@ -269,7 +269,7 @@
       unlockScroll();
     };
 
-    document.querySelectorAll('.pcard').forEach(card => {
+    document.querySelectorAll('.pcard, .orbit-card').forEach(card => {
       card.addEventListener('click', () => openModal(card));
     });
     closeBtn && closeBtn.addEventListener('click', closeModal);
