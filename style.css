@@ -264,7 +264,7 @@ p{color:var(--ink-70)}
      (desktop stacking doesn't care about source order since .hero__content
      already sits above via z-index; mobile flex order does the same job
      for static-flow layout). */
-  .hero.pin-collage{min-height:0;padding-top:104px}
+  .hero.pin-collage{min-height:0;padding-top:160px}
   .hero.pin-collage .hero__media{position:static;inset:auto;order:2}
   .hero.pin-collage .hero__content{order:1}
   .hero.pin-collage .hero__scroll{display:none}
