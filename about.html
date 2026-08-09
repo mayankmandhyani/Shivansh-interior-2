@@ -204,6 +204,100 @@
   </div>
 </section>
 
+<!-- ============ IN MOTION (video showcase) ============
+     PLACEHOLDER CONTENT — no real video files exist yet. Each card
+     below shows a real project photo as its poster/fallback, exactly
+     like the rest of this site's placeholder-image system elsewhere.
+     To drop in a real clip once you have one: replace the commented
+     <video> block with an uncommented one, pointing src at your
+     actual .mp4 file, and remove the <img class="evs-poster"> line
+     right above it. Nothing else needs to change — the card, caption,
+     sound toggle, and autoplay logic already work off whichever one
+     (video or poster) is actually present. See evs.js. -->
+<section class="section evs">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="section-head__title">
+        <p class="eyebrow">Behind the Design</p>
+        <h2 style="margin-top:20px">The Studio,<br>In Motion</h2>
+      </div>
+      <p class="lede">A closer look at process — material selection, site walks and finishing detail, as it happens.</p>
+    </div>
+  </div>
+
+  <div class="evs-grid" id="evsGrid" role="list">
+
+    <div class="evs-card" style="--evs-i:0" role="listitem">
+      <div class="evs-media">
+        <div class="evs-skeleton" aria-hidden="true"></div>
+        <!-- Once you have a real clip, uncomment this block and delete
+             the <img class="evs-poster"> line below it. The sound button
+             is optional — only add it if the clip actually has audio
+             worth hearing; evs.js already checks for a video before
+             wiring the button up, so leaving it out is safe too.
+        <video class="evs-video" autoplay muted loop playsinline webkit-playsinline preload="auto" disablepictureinpicture disableremoteplayback aria-hidden="true" tabindex="-1" poster="POSTER_IMAGE_URL_HERE">
+          <source src="YOUR_VIDEO.mp4" type="video/mp4">
+        </video>
+        <button type="button" class="evs-sound" aria-pressed="false" aria-label="Unmute video">
+          <svg class="evs-icon-muted" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5Z" fill="currentColor"/><path d="M23 9l-6 6M17 9l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <svg class="evs-icon-unmuted" width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true" hidden><path d="M11 5 6 9H2v6h4l5 4V5Z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        -->
+        <img class="evs-poster" src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=75" alt="" loading="lazy">
+        <div class="evs-overlay">
+          <p class="evs-overlay__kicker">Material Selection</p>
+          <p class="evs-overlay__title">Choosing the Palette</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="evs-card" style="--evs-i:1" role="listitem">
+      <div class="evs-media">
+        <div class="evs-skeleton" aria-hidden="true"></div>
+        <img class="evs-poster" src="https://images.unsplash.com/photo-1566041510394-cf7c8fe21800?auto=format&fit=crop&w=800&q=75" alt="" loading="lazy">
+        <div class="evs-overlay">
+          <p class="evs-overlay__kicker">Site Detail</p>
+          <p class="evs-overlay__title">Texture, Up Close</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="evs-card" style="--evs-i:2" role="listitem">
+      <div class="evs-media">
+        <div class="evs-skeleton" aria-hidden="true"></div>
+        <img class="evs-poster" src="https://images.unsplash.com/photo-1550053808-52a75a05955d?auto=format&fit=crop&w=800&q=75" alt="" loading="lazy">
+        <div class="evs-overlay">
+          <p class="evs-overlay__kicker">Finishing</p>
+          <p class="evs-overlay__title">The Final Pass</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="evs-card" style="--evs-i:3" role="listitem">
+      <div class="evs-media">
+        <div class="evs-skeleton" aria-hidden="true"></div>
+        <img class="evs-poster" src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=75" alt="" loading="lazy">
+        <div class="evs-overlay">
+          <p class="evs-overlay__kicker">Concept</p>
+          <p class="evs-overlay__title">From Sketch to Space</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="evs-card" style="--evs-i:4" role="listitem">
+      <div class="evs-media">
+        <div class="evs-skeleton" aria-hidden="true"></div>
+        <img class="evs-poster" src="https://images.unsplash.com/photo-1604328698692-f76ea9498e76?auto=format&fit=crop&w=800&q=75" alt="" loading="lazy">
+        <div class="evs-overlay">
+          <p class="evs-overlay__kicker">Handover</p>
+          <p class="evs-overlay__title">A Finished Room</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
 <!-- ============ FOUNDER ============ -->
 <section class="section">
   <div class="wrap">
@@ -329,6 +423,7 @@
   <svg viewBox="0 0 16 16" fill="currentColor"><path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/></svg>
 </a>
 
+<script src="evs.js"></script>
 <script src="main.js"></script>
 <script src="cw-loader.js" defer></script>
 </body>
