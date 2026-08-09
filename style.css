@@ -426,7 +426,13 @@ p{color:var(--ink-70)}
 .nav.is-scrolled{padding-block:18px}
 
 /* page without dark hero (about/projects) — navbar starts solid */
-.nav--solid{background:rgba(255,255,255,.96);border-color:var(--line-soft);padding-block:18px}
+.nav--solid .nav__row{position:relative}
+.nav--solid .nav__row::before{
+  content:'';position:absolute;inset:0;
+  background:rgba(255,255,255,.96);
+  z-index:-1;
+}
+.nav--solid{border-color:var(--line-soft);padding-block:18px}
 .nav--solid .nav__logo,.nav--solid .nav__toggle{color:var(--ink)}
 .nav--solid .nav__links a{color:var(--ink-70)}
 .nav--solid .nav__links a.is-active{color:var(--gold-dim)}
