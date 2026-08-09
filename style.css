@@ -507,6 +507,25 @@ p{color:var(--ink-70)}
 .hero.pin-collage{justify-content:center}
 .hero.pin-collage .hero__content{z-index:10;padding-bottom:0}
 .hero__content .wrap{padding-inline:0}
+
+/* Desktop only, homepage collage hero specifically: text sits dark-on-light
+   in the negative space between the scattered photos (not white-on-photo
+   like the mobile/About treatment), but on wide viewports the photos sit
+   close enough to the text that bright highlights near the edges can eat
+   into contrast. A soft, blurred warm-white glow directly behind just the
+   text block fixes this without touching the photos, adding an overlay
+   across the whole hero, or darkening anything — the collage stays fully
+   visible and natural everywhere except immediately behind the words. */
+@media (min-width:921px){
+  .hero.pin-collage .hero__content::before{
+    content:'';position:absolute;z-index:-1;
+    inset:-40px -60px;
+    background:radial-gradient(ellipse at center, rgba(253,251,250,.82) 0%, rgba(253,251,250,.5) 55%, rgba(253,251,250,0) 100%);
+    filter:blur(4px);
+    pointer-events:none;
+  }
+}
+
 .hero__kicker{color:var(--gold-dim);margin-bottom:22px}
 .hero h1{max-width:14ch;margin-bottom:22px}
 .hero__sub{color:var(--ink-70);font-weight:300;max-width:44ch;font-size:clamp(1rem,1.3vw,1.2rem);margin-bottom:44px}
@@ -524,28 +543,20 @@ p{color:var(--ink-70)}
 /* ---------- Section shells ---------- */
 .section{padding-block:clamp(80px,10vw,150px)}
 
-/* ---------- Seam bridges ----------
-   Hero -> #about: a true overlap blend, not a color-matching guess.
-   #about is pulled up by 40px (negative margin) so its top edge sits
-   INSIDE the hero's own box, then #about's own background is masked
-   from fully transparent (revealing the hero's actual rendered
-   pixels underneath — whatever the animated mesh gradient + scrim
-   currently look like, guaranteed pixel-identical since it's the
-   same pixels, not an approximation) to fully opaque by the point
-   where hero's box actually ends. Below that, #about renders
-   normally. 40px is deliberately small: it's comfortably inside
-   hero's own bottom padding (min 64px) and stops exactly at the
-   scroll-cue's bottom edge (bottom:40px), so neither hero's text nor
-   the scroll cue ever sits inside the blended zone.
-   -webkit-mask-image is required — this fails silently (no blend,
-   but no breakage either) on Safari/iOS without it. */
+/* Seam bridge removed: this used to blend the hero directly into
+   #about via a small negative margin + mask reveal, assuming #about
+   was the hero's immediate next sibling in the DOM. That's no longer
+   true — the marquee now sits between them (moved there per this
+   round's brief) — so the negative margin would pull #about up into
+   the marquee's box instead, showing a stray strip of the marquee's
+   background rather than the intended hero-blend. The marquee's own
+   solid background now serves as the transition between hero and
+   content instead, which is the correct read of the new order. */
 #about{
   position:relative;z-index:1;
   background:var(--white);
-  margin-top:-40px;
-  -webkit-mask-image:linear-gradient(to bottom, transparent 0, #000 40px, #000 100%);
-          mask-image:linear-gradient(to bottom, transparent 0, #000 40px, #000 100%);
 }
+
 .cta::before{
   content:'';position:absolute;top:0;left:0;right:0;height:110px;z-index:0;
   background:linear-gradient(180deg, var(--white) 0%, transparent 100%);
