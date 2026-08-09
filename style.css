@@ -200,7 +200,7 @@ p{color:var(--ink-70)}
   overflow:hidden;
 }
 .parallax-hero__crumb{
-  position:absolute;top:130px;left:var(--gutter);z-index:6;
+  position:absolute;top:170px;left:var(--gutter);z-index:6;
   display:flex;gap:10px;align-items:center;
   font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.7);
 }
@@ -241,7 +241,7 @@ p{color:var(--ink-70)}
 .parallax-hero__actions{display:flex;justify-content:center;gap:18px;margin-top:36px;flex-wrap:wrap}
 
 @media (max-width:920px){
-  .parallax-hero{height:auto;min-height:0;padding:120px var(--gutter) 64px;overflow:visible}
+  .parallax-hero{height:auto;min-height:0;padding:160px var(--gutter) 64px;overflow:visible}
   .parallax-hero__crumb{position:static;margin-bottom:24px}
   .parallax-hero__content{position:static;transform:none;max-width:none;padding-inline:0}
   .parallax-hero__stage{
@@ -355,6 +355,63 @@ p{color:var(--ink-70)}
 .nav__cta{margin-left:8px}
 .nav__toggle{display:none;width:26px;height:18px;position:relative;color:var(--white);transition:color var(--dur-base) var(--ease)}
 .nav__toggle::before{content:'';position:absolute;top:50%;left:50%;width:44px;height:44px;transform:translate(-50%,-50%)}
+
+/* ---------- Announcement marquee ----------
+   Lives as a second row inside <header class="nav"> — the SAME
+   position:fixed box nav already uses, not a second fixed/sticky
+   system. It just flows as a normal block below .nav__inner, so it
+   automatically tracks nav's own height (which already changes on
+   scroll via padding-block) with zero JS and zero manual pixel math.
+   No z-index of its own: it's not position:fixed itself, so it
+   naturally paints below the mobile drawer (which IS fixed, with its
+   own z-index) without any extra rule needed. */
+.marquee{
+  overflow:hidden;
+  background:var(--charcoal);
+  border-top:1px solid rgba(255,255,255,.08);
+  padding-block:11px;
+}
+.marquee__track{
+  display:flex;width:max-content;
+  animation:marqueeScroll 30s linear infinite;
+}
+.marquee:hover .marquee__track{animation-duration:60s}
+.marquee__seq{
+  display:flex;align-items:center;flex:none;
+  padding-inline:0;
+}
+.marquee__item{
+  display:inline-flex;align-items:center;gap:20px;
+  padding-inline:20px;
+  font-family:var(--sans);font-size:.68rem;font-weight:600;
+  letter-spacing:.16em;text-transform:uppercase;
+  color:var(--gold);white-space:nowrap;line-height:1.2;
+}
+.marquee__item::after{content:'';width:3px;height:3px;border-radius:50%;background:var(--gold-dim);flex:none}
+
+@keyframes marqueeScroll{
+  from{transform:translate3d(0,0,0)}
+  to{transform:translate3d(-50%,0,0)}
+}
+
+@media (max-width:600px){
+  .marquee__track{animation-duration:24s}
+  .marquee__item{font-size:.62rem;letter-spacing:.12em;gap:14px;padding-inline:14px}
+}
+@media (min-width:1440px){
+  .marquee__track{animation-duration:36s}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .marquee__track{animation:none;width:100%;display:block}
+  .marquee__seq:nth-child(n+2){display:none}
+  .marquee__seq{
+    display:block;width:100%;
+    overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+    text-align:center;
+  }
+}
+
 .nav__toggle span{position:absolute;left:0;right:0;height:1px;background:currentColor;transition:transform var(--dur-base) var(--ease), opacity var(--dur-base) var(--ease)}
 .nav__toggle span:nth-child(1){top:0}
 .nav__toggle span:nth-child(2){top:50%;transform:translateY(-50%)}
@@ -630,7 +687,7 @@ p{color:var(--ink-70)}
 .page-hero__media{position:absolute;inset:0}
 .page-hero__media .media{--ar:auto;height:100%}
 .page-hero__scrim{position:absolute;inset:0;background:linear-gradient(180deg, rgba(32,11,21,.6) 0%, rgba(20,8,14,.92) 100%)}
-.page-hero__content{position:relative;z-index:2;padding:160px var(--gutter) 64px}
+.page-hero__content{position:relative;z-index:2;padding:200px var(--gutter) 64px}
 .page-hero__content .eyebrow{color:var(--gold)}
 .page-hero__content .wrap{padding-inline:0}
 .crumb{display:flex;gap:10px;align-items:center;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:20px}
