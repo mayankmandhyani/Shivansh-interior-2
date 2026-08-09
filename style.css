@@ -200,7 +200,7 @@ p{color:var(--ink-70)}
   overflow:hidden;
 }
 .parallax-hero__crumb{
-  position:absolute;top:170px;left:var(--gutter);z-index:6;
+  position:absolute;top:130px;left:var(--gutter);z-index:6;
   display:flex;gap:10px;align-items:center;
   font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.7);
 }
@@ -233,15 +233,13 @@ p{color:var(--ink-70)}
   position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
   z-index:10;text-align:center;max-width:640px;padding-inline:24px;width:100%;
 }
-.parallax-hero__content h1{margin-block:22px 22px}
-.parallax-hero__content .lede{margin-inline:auto}
+.parallax-hero__content h1{margin-block:22px 22px;color:var(--white)}
+.parallax-hero__content .lede{margin-inline:auto;color:rgba(255,255,255,.78)}
 .parallax-hero__content .eyebrow{color:var(--gold)}
-.parallax-hero__content h1{color:var(--white)}
-.parallax-hero__content .lede{color:rgba(255,255,255,.78)}
 .parallax-hero__actions{display:flex;justify-content:center;gap:18px;margin-top:36px;flex-wrap:wrap}
 
 @media (max-width:920px){
-  .parallax-hero{height:auto;min-height:0;padding:160px var(--gutter) 64px;overflow:visible}
+  .parallax-hero{height:auto;min-height:0;padding:120px var(--gutter) 64px;overflow:visible}
   .parallax-hero__crumb{position:static;margin-bottom:24px}
   .parallax-hero__content{position:static;transform:none;max-width:none;padding-inline:0}
   .parallax-hero__stage{
@@ -357,14 +355,19 @@ p{color:var(--ink-70)}
 .nav__toggle::before{content:'';position:absolute;top:50%;left:50%;width:44px;height:44px;transform:translate(-50%,-50%)}
 
 /* ---------- Announcement marquee ----------
-   Lives as a second row inside <header class="nav"> — the SAME
-   position:fixed box nav already uses, not a second fixed/sticky
-   system. It just flows as a normal block below .nav__inner, so it
-   automatically tracks nav's own height (which already changes on
-   scroll via padding-block) with zero JS and zero manual pixel math.
-   No z-index of its own: it's not position:fixed itself, so it
-   naturally paints below the mobile drawer (which IS fixed, with its
-   own z-index) without any extra rule needed. */
+   Sits as a normal sibling immediately after <header class="nav">,
+   NOT nested inside it. Originally lived inside the fixed header
+   box as a second row (avoided a second position:fixed system,
+   tracked nav's own height automatically) — but that meant it was
+   permanently pinned to the top of the viewport at every scroll
+   position, on top of a decorative element that doesn't need to stay
+   visible the whole time someone's reading the page. Moved out to
+   normal document flow instead: it scrolls away naturally with the
+   rest of the content, while the nav above it keeps its own fixed
+   behavior untouched. None of the rules below actually depended on
+   being inside the fixed parent — no position, no z-index tied to
+   .nav's stacking context — so nothing here needed to change, only
+   where it sits in the document. */
 .marquee{
   overflow:hidden;
   background:var(--charcoal);
@@ -417,13 +420,12 @@ p{color:var(--ink-70)}
 .nav__toggle span:nth-child(2){top:50%;transform:translateY(-50%)}
 .nav__toggle span:nth-child(3){bottom:0}
 
-.nav.is-scrolled{background:rgba(253,251,250,.92);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-color:var(--line-soft);box-shadow:0 8px 30px -20px rgba(47,17,32,.25)}
+.nav.is-scrolled{background:rgba(253,251,250,.92);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-color:var(--line-soft);box-shadow:0 8px 30px -20px rgba(47,17,32,.25);padding-block:18px}
 .nav.is-scrolled .nav__logo,.nav.is-scrolled .nav__toggle{color:var(--ink)}
 .nav.is-scrolled .nav__links a{color:var(--ink-70)}
 .nav.is-scrolled .nav__links a.is-active{color:var(--gold-dim)}
 .nav.is-scrolled .nav__cta .btn--on-dark{color:var(--ink);border-color:var(--ink)}
 .nav.is-scrolled .nav__cta .btn--on-dark:hover{background:var(--ink);color:var(--white)}
-.nav.is-scrolled{padding-block:18px}
 
 /* page without dark hero (about/projects) — navbar starts solid */
 .nav--solid .nav__row{position:relative}
@@ -693,7 +695,7 @@ p{color:var(--ink-70)}
 .page-hero__media{position:absolute;inset:0}
 .page-hero__media .media{--ar:auto;height:100%}
 .page-hero__scrim{position:absolute;inset:0;background:linear-gradient(180deg, rgba(32,11,21,.6) 0%, rgba(20,8,14,.92) 100%)}
-.page-hero__content{position:relative;z-index:2;padding:200px var(--gutter) 64px}
+.page-hero__content{position:relative;z-index:2;padding:160px var(--gutter) 64px}
 .page-hero__content .eyebrow{color:var(--gold)}
 .page-hero__content .wrap{padding-inline:0}
 .crumb{display:flex;gap:10px;align-items:center;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:20px}
@@ -876,17 +878,17 @@ body.no-scroll{overflow:hidden}
 }
 .evs-grid::-webkit-scrollbar{display:none}
 .evs-grid.is-dragging{cursor:grabbing;scroll-snap-type:none}
-.evs-card{flex:0 0 clamp(200px,22vw,260px);scroll-snap-align:start}
-@media (max-width:640px){
-  .evs-card{flex-basis:68vw}
-}
-
 .evs-card{
+  flex:0 0 clamp(200px,22vw,260px);scroll-snap-align:start;
   display:block;position:relative;
   opacity:0;transform:translateY(28px);
   transition:opacity .7s var(--ease), transform .7s var(--ease);
   transition-delay:calc(var(--evs-i,0) * 70ms);
 }
+@media (max-width:640px){
+  .evs-card{flex-basis:68vw}
+}
+
 .evs.is-in-view .evs-card{opacity:1;transform:translateY(0)}
 @media (prefers-reduced-motion: reduce){
   .evs-card{opacity:1 !important;transform:none !important;transition:none !important}
