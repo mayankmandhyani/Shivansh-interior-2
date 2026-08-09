@@ -541,7 +541,7 @@ p{color:var(--ink-70)}
 @media (prefers-reduced-motion:reduce){.hero__scroll-line::after{animation:none;top:0}}
 
 /* ---------- Section shells ---------- */
-.section{padding-block:clamp(80px,10vw,150px)}
+.section{padding-block:clamp(80px,10vw,150px);scroll-margin-top:110px}
 
 /* Seam bridge removed: this used to blend the hero directly into
    #about via a small negative margin + mask reveal, assuming #about

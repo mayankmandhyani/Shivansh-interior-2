@@ -42,14 +42,23 @@
     const poster = card.querySelector('.evs-poster');
     const media = card.querySelector('.evs-media');
 
-    /* Skeleton removal */
+    /* Skeleton removal.
+       The skeleton should clear once there's something real to show —
+       for a video card, that's the poster image (the video itself may
+       not load for a while yet, if this card is still off-screen; see
+       the lazy-load strategy below). Once the real video does start
+       playing, it visually replaces the poster in the same box with
+       no shimmer involved either way. */
     const removeSkeleton = () => card.classList.add('is-loaded');
     if (video) {
-      if (video.readyState >= 1) {
-        removeSkeleton();
+      const videoPoster = video.getAttribute('poster');
+      if (videoPoster) {
+        const posterProbe = new Image();
+        posterProbe.onload = removeSkeleton;
+        posterProbe.onerror = removeSkeleton; // don't get stuck on a broken poster
+        posterProbe.src = videoPoster;
       } else {
-        video.addEventListener('loadedmetadata', removeSkeleton, { once: true });
-        setTimeout(removeSkeleton, 1200); // safety net if autoplay never starts
+        removeSkeleton();
       }
     } else if (poster) {
       if (poster.complete) removeSkeleton();
@@ -58,17 +67,24 @@
       removeSkeleton();
     }
 
-    /* Autoplay + pause-when-offscreen */
+    /* Autoplay + pause-when-offscreen.
+       video.play() only fires from inside the IntersectionObserver
+       callback below — never unconditionally on load. Combined with
+       preload="none"/"metadata" in the HTML (see about.html), this
+       means a video genuinely doesn't touch the network until it's
+       actually near the viewport, not just "playback is paused while
+       secretly still downloading in the background". rootMargin gives
+       it a 200px head start so playback is ready by the time it's
+       actually visible, not starting cold at that exact moment. */
     if (video) {
       video.muted = true; // belt-and-braces, same as the source component
-      video.play().catch(() => {});
 
       const playObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) video.play().catch(() => {});
           else video.pause();
         });
-      }, { threshold: 0.1, rootMargin: '150px 0px' });
+      }, { threshold: 0.1, rootMargin: '200px 0px' });
       playObserver.observe(video);
     }
 
