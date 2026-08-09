@@ -377,7 +377,7 @@ p{color:var(--ink-70)}
 }
 .marquee:hover .marquee__track{animation-duration:60s}
 .marquee__seq{
-  display:flex;align-items:center;flex:none;
+  display:flex;flex-wrap:nowrap;align-items:center;flex:none;
   padding-inline:0;
 }
 .marquee__item{
