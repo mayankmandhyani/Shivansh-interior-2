@@ -86,6 +86,22 @@
         });
       }, { threshold: 0.1, rootMargin: '200px 0px' });
       playObserver.observe(video);
+
+      // Safety net: on a first-ever visit, this observer initializes
+      // while the page loader's scroll-lock is still transitioning
+      // out (body position changing from fixed back to normal right
+      // around when this runs). IntersectionObserver's callback isn't
+      // guaranteed to fire synchronously with that transition, so a
+      // video that's actually already visible can occasionally miss
+      // its first intersection event and never get its initial
+      // play() call. One manual re-check shortly after setup catches
+      // that specific case; the observer keeps working normally
+      // either way, this only guards the initial moment.
+      setTimeout(() => {
+        const rect = video.getBoundingClientRect();
+        const inView = rect.top < window.innerHeight && rect.bottom > 0;
+        if (inView && video.paused) video.play().catch(() => {});
+      }, 900);
     }
 
     /* Sound toggle */

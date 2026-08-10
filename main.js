@@ -52,58 +52,86 @@
   };
 
   /* ---------- Page loader ----------
-     Tracks real image load progress (not a fake animated counter) via
-     document.images + each image's own load/error event, so the
-     percentage actually reflects what's happening. window.load is the
-     definitive "everything's ready" signal that dismisses it. A small
-     minimum display time (skipped under reduced-motion) exists purely
-     so a very fast cached load doesn't just flash instead of reading
-     as a deliberate brand moment — never pads beyond real load time
-     by more than that. A hard timeout guarantees the page is never
-     permanently blocked if some resource never fires load/error. */
+     First-visit-only (sessionStorage) — once dismissed, it never
+     shows again for the rest of the browsing session, on any page,
+     so page-to-page navigation and repeat visits open instantly.
+
+     Deliberately NOT gated on window.load. window.load waits for
+     every resource on the page, including <video> elements — on the
+     About page specifically, that meant two ~2.5MB videos were
+     directly delaying the loader's dismissal, even though they
+     already lazy-load correctly on their own (see evs.js) and were
+     never meant to block anything. Tracked instead: actual <img>
+     elements + DOMContentLoaded, which is what's actually needed for
+     the page to be usable — video keeps loading in the background on
+     its own schedule, completely decoupled from this. */
   const loader = document.getElementById('pageLoader');
   if (loader) {
-    const fill = document.getElementById('loaderFill');
-    const pct = document.getElementById('loaderPct');
-    lockScroll();
+    const alreadySeen = (() => {
+      try { return sessionStorage.getItem('shivansh-loader-seen') === '1'; }
+      catch (e) { return false; } // sessionStorage unavailable (rare) — fail open, show loader once
+    })();
 
-    const imgs = Array.from(document.images);
-    const total = imgs.length || 1;
-    let loadedCount = 0;
-    let finished = false;
+    if (alreadySeen) {
+      loader.remove();
+    } else {
+      const fill = document.getElementById('loaderFill');
+      const pct = document.getElementById('loaderPct');
+      lockScroll();
 
-    const update = () => {
-      const percent = Math.min(100, Math.round((loadedCount / total) * 100));
-      if (fill) fill.style.width = percent + '%';
-      if (pct) pct.textContent = percent + '%';
-    };
+      const imgs = Array.from(document.images);
+      const total = imgs.length || 1;
+      let loadedCount = 0;
+      let finished = false;
 
-    imgs.forEach((img) => {
-      if (img.complete) {
-        loadedCount++;
-      } else {
-        const mark = () => { loadedCount++; update(); };
-        img.addEventListener('load', mark, { once: true });
-        img.addEventListener('error', mark, { once: true });
-      }
-    });
-    update();
+      const update = () => {
+        const percent = Math.min(100, Math.round((loadedCount / total) * 100));
+        if (fill) fill.style.width = percent + '%';
+        if (pct) pct.textContent = percent + '%';
+      };
 
-    const finish = () => {
-      if (finished) return;
-      finished = true;
-      loadedCount = total;
+      imgs.forEach((img) => {
+        if (img.complete) {
+          loadedCount++;
+        } else {
+          const mark = () => { loadedCount++; update(); };
+          img.addEventListener('load', mark, { once: true });
+          img.addEventListener('error', mark, { once: true });
+        }
+      });
       update();
-      unlockScroll();
-      loader.classList.add('is-hidden');
-    };
 
-    const minDisplay = prefersReducedMotion ? 0 : 450;
-    const startedAt = Date.now();
-    window.addEventListener('load', () => {
-      setTimeout(finish, Math.max(0, minDisplay - (Date.now() - startedAt)));
-    });
-    setTimeout(finish, 6000); // safety net — never block the page indefinitely
+      const finish = () => {
+        if (finished) return;
+        finished = true;
+        loadedCount = total;
+        update();
+        unlockScroll();
+        loader.classList.add('is-hidden');
+        try { sessionStorage.setItem('shivansh-loader-seen', '1'); } catch (e) {}
+      };
+
+      const minDisplay = prefersReducedMotion ? 0 : 450;
+      const startedAt = Date.now();
+      const allImagesReady = () => loadedCount >= total;
+
+      const attemptFinish = () => {
+        if (!allImagesReady()) return;
+        setTimeout(finish, Math.max(0, minDisplay - (Date.now() - startedAt)));
+      };
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', attemptFinish);
+      } else {
+        attemptFinish();
+      }
+      imgs.forEach((img) => {
+        img.addEventListener('load', attemptFinish, { once: true });
+        img.addEventListener('error', attemptFinish, { once: true });
+      });
+
+      setTimeout(finish, 6000); // safety net — never block the page indefinitely
+    }
   }
 
   /* ---------- Navbar scroll state ---------- */
@@ -164,8 +192,41 @@
     // Click outside (the backdrop) closes the menu.
     if (backdrop) backdrop.addEventListener('click', closeMenu);
 
-    // Clicking any nav link closes the menu.
-    links.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+    // Clicking any nav link closes the menu. For an anchor link
+    // (e.g. Services -> #services, whether that's a same-page jump
+    // or a cross-page link that ends in a hash), skip the scroll
+    // position restore inside closeMenu()/unlockScroll() — restoring
+    // the OLD pre-drawer scroll position via scrollTo() directly
+    // fights the anchor jump the user just asked for, whether the
+    // race lands on this page or the one being navigated to. Every
+    // other close-behavior (drawer slide-out, backdrop, body class,
+    // aria state) still happens exactly as before; only the
+    // scroll-position restore itself is skipped for these links.
+    links.querySelectorAll('a').forEach(a => {
+      const isAnchorLink = a.getAttribute('href') && a.getAttribute('href').includes('#');
+      a.addEventListener('click', () => {
+        if (isAnchorLink) {
+          // Same close effects as closeMenu(), minus the scrollTo() restore.
+          if (!isOpen) return;
+          isOpen = false;
+          links.classList.remove('is-open');
+          if (backdrop) backdrop.classList.remove('is-open');
+          document.body.classList.remove('nav-is-open');
+          toggle.setAttribute('aria-expanded', 'false');
+          scrollLockCount = Math.max(0, scrollLockCount - 1);
+          if (scrollLockCount === 0) {
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.left = '';
+            document.body.style.right = '';
+            document.body.classList.remove('no-scroll');
+            // deliberately no window.scrollTo() here
+          }
+        } else {
+          closeMenu();
+        }
+      });
+    });
 
     // Escape closes the menu.
     document.addEventListener('keydown', (e) => {
