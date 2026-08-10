@@ -3,6 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' https://images.unsplash.com; media-src 'self'; connect-src 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; base-uri 'self';">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<!-- Security headers note: GitHub Pages serves static files with no
+     custom HTTP-header support, so this meta-tag CSP is the strongest
+     policy achievable on this hosting platform. It cannot carry
+     frame-ancestors (browsers ignore that directive in a meta tag) or
+     report-uri; those, plus X-Content-Type-Options, Permissions-Policy,
+     and Strict-Transport-Security, require real HTTP headers and are
+     unavailable here. See the security audit report for the full
+     picture and what moving to a host with header support would add. -->
 <title>About Us — Shivansh Interiors</title>
 <meta name="description" content="The story, philosophy and founder behind Shivansh Interiors — a luxury interior design studio crafting timeless residential and commercial spaces since 2012.">
 <link rel="canonical" href="https://mayankmandhyani.github.io/Shivansh-interior-2/about.html">
