@@ -702,10 +702,19 @@ p{color:var(--ink-70)}
 @media (max-width:560px){.wa-float{width:54px;height:54px;right:18px;bottom:calc(18px + env(safe-area-inset-bottom, 0px))}}
 
 /* ---------- Page hero (About / Projects — shorter, non full-bleed-video style) ---------- */
-.page-hero{position:relative;min-height:62vh;display:flex;align-items:flex-end;color:var(--white);background:var(--charcoal);overflow:hidden}
+.page-hero{position:relative;min-height:62vh;display:flex;align-items:flex-end;color:var(--white);background:var(--charcoal);overflow:hidden;border-radius:24px 24px 0 0}
 .page-hero__media{position:absolute;inset:0}
 .page-hero__media .media{--ar:auto;height:100%}
 .page-hero__scrim{position:absolute;inset:0;background:linear-gradient(180deg, rgba(20,8,14,.42) 0%, rgba(18,8,13,.6) 35%, rgba(20,8,14,.92) 100%)}
+@media (max-width:760px){
+  /* .page-hero__content's top padding is a fixed 160px, which eats a
+     much larger share of a short mobile hero (~62vh on a typical
+     phone) than it does on tall desktop viewports — so the heading
+     lands proportionally higher up, in a region the desktop-tuned
+     gradient above doesn't cover strongly enough. Front-loaded
+     specifically for that. */
+  .page-hero__scrim{background:linear-gradient(180deg, rgba(20,8,14,.58) 0%, rgba(18,8,13,.72) 22%, rgba(20,8,14,.92) 100%)}
+}
 .page-hero__content{position:relative;z-index:2;padding:160px var(--gutter) 64px}
 .page-hero__content .eyebrow{color:var(--gold)}
 .page-hero__content .wrap{padding-inline:0}
